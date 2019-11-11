@@ -22,7 +22,7 @@
 #                                                                                        #
 ##########################################################################################
 
-TARGET_EXEC ?= SHiP.io
+TARGET_EXEC ?= SHiP_CLI
 TEST_TARGET_EXEC ?= SHiP.ht
 
 # Set Compilers to use
