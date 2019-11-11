@@ -20,12 +20,87 @@
     SOFTWARE.                                                                               
 **************************************************************************************************/
 
+
+// Libary Includes
+#include <stdio.h>
 #include <stdint.h>
+#include <winsock2.h>
+#include <stdbool.h>
+
+
+// Customized Includes
+#include "../project.h"
+#include "project_cli.h"
+
+// GLOBAL VARIABLE.
+// TODO: extern in header file. 
+bool GAME_OVER = false;
+bool WINSOCK   = false; 
+
+
+
+clientInfo_t client_info;
+
+
+bool GC_Reg_Client()
+{
+    // register client with server and recieve unique client code. 
+
+
+    return true; 
+}
+
+void CG_Setup()
+{
+    if (WINSOCK)
+    {
+        WORD winsock_version = 0x202;
+        WSADATA winsock_data;
+
+        if( WSAStartup( winsock_version, &winsock_data ) )
+        {
+            printf( "WSAStartup failed: %d", WSAGetLastError() );
+            exit(0);
+        }
+    }
+
+    // Register Client with server;
+    if (!GC_Reg_Client)
+    {
+        printf("failed to register client with server");
+
+        exit(0);
+    }
+
+
+
+    // Initialize Game setup variable
+    GAME_OVER = false;
+}
+
+void CG_teardown()
+{
+
+
+    
+}
 
 
 int main(int argc, char const *argv[])
 {
-    
+
+    CG_Setup();
+
+    while(!GAME_OVER)
+    {
+        CG_Draw();
+        CG_GetInput(); 
+        CG_SendInput();
+
+
+    }
+
+    CG_teardown();
     return 0;
 }
 

@@ -21,6 +21,7 @@
 **************************************************************************************************/
 
 #include <stdint.h>
+#include <winsock2.h>
 
 
 int main(int argc, char const *argv[])
