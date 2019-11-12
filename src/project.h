@@ -39,8 +39,8 @@
 #define SIO_SOCKET_PTCOL    (IPPROTO_UDP)
 #define SIO_PORT_BINDING    (9999)
 
-
-#define SIO_PACKET_SIZE     ()
+#define SIO_MAX_PLAYERS     (2)
+#define SIO_PACKET_SIZE     (256)
 
 
 /*************************************************************************************************/

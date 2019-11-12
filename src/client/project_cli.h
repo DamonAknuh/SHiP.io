@@ -24,13 +24,18 @@
 #ifndef __PROJECT_CLI_H
 #define __PROJECT_CLI_H
 
+// library includes
+#include <stdint.h>
 
+// program includes. 
+#include "project.h"
 
 /*************************************************************************************************/
 /*                            GLOBAL DEFINTIONS                                                  */
 /***** ********************************************************************************************/
 
 
+#define BOARD_SIZE (50)
 /*************************************************************************************************/
 /*                            TYPEDEFS & STRUCTURES                                              */
 /*************************************************************************************************/
@@ -42,5 +47,36 @@ typedef struct
 }clientInfo_t;
 
 extern clientInfo_t clientInfo;
+
+/*************************************************************************************************/
+/*                            PACKET INFORMATION                                                 */
+/*************************************************************************************************/
+
+typedef struct
+{
+    union
+    {
+        struct 
+        {
+                uint32_t type        : 1; // 0 for registration 1 for input data.
+                uint32_t clientID    : 1; // client ID for the two client programs.
+                uint32_t state       : 1; // 0 for dead 1 for alive 
+                uint32_t resv        : 13;
+                uint32_t x_loc       : 8;
+                uint32_t y_loc       : 8;
+        } data; 
+        uint32_t bits; 
+    };
+}cData_t; 
+
+
+typedef struct 
+{
+    union
+    {
+        cData_t data[SIO_MAX_PLAYERS];
+        uint8_t PACKET_DATA[SIO_PACKET_SIZE];
+    };
+} clientPacket_t;
 
 #endif // __PROJECT_CLI_H
