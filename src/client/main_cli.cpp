@@ -47,13 +47,16 @@ bool SetupGame()
 int main(int argc, char const *argv[])
 {
 
+    // Driver instantiation and registeration.
     cSockDriver_c * cSockDriver = cSockDriver_Handle::Handler_GetInstance();
 
+    // Game Initialization;
     if (!SetupGame())
     {
         printf("ERROR: Setup Game Failed");
     }
 
+    // main game loop
     while(!GAME_OVER)
     {
 

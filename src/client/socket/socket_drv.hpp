@@ -43,7 +43,7 @@ public:
     ~cSockDriver_c();
     bool cSock_RegisterClient();    ///< Parses image header information
     void cSock_SendData(uint64_t input);     ///< Stores Pixel Array and information
-    void cSock_RecieveData();   ///< Manipulates the bmp file into pixel Art.    
+    void cSock_RecieveData(uint64_t &input);   ///< Manipulates the bmp file into pixel Art.    
 
 private:
 
