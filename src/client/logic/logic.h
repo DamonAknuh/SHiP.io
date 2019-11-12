@@ -24,6 +24,10 @@
 #ifndef __LOGIC_H
 #define __LOGIC_H
 
+#include <stdint.h>
+
+void Calculate_GameState(uint64_t data); 
+
 
 
 #endif // __LOGIC_H
