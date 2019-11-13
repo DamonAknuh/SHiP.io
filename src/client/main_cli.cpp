@@ -22,44 +22,147 @@
 
 
 // Libary Includes
-#include <stdio.h>
+#include <iostream>
 #include <stdint.h>
-#include <winsock2.h>
+#include <winsock2.h> // for socket implementation. 
 #include <stdbool.h>
+#include <conio.h> // for kbhit and getch.
 
 
 // Customized Includes
 #include "../project.h"
 #include "project_cli.h"
 #include "socket_drv.hpp"
+#include "logic.h"
 
 // GLOBAL VARIABLE.
 // TODO: extern in header file. 
 bool GAME_OVER = false;
-
+clientInfo_t clientInfo;
 
 bool SetupGame()
 {
     GAME_OVER = false; 
+
+    clientInfo.xLoc = 5;
+    clientInfo.yLoc = 5; 
+    clientInfo.fxLoc = 25;
+    clientInfo.fyLoc = 25; 
+    clientInfo.weapons = 0; 
     return true;
 }
 
-int main(int argc, char const *argv[])
+void Draw_Game()
+{
+    // clear console window.
+    system ("cls");
+
+    // Draw first border. 
+    for (uint32_t i = 0; i < GAME_SIZE+2; i++)
+    {
+        std::cout << "#";
+    }
+    std::cout << std::endl;
+
+    for (uint32_t i = 0; i < GAME_SIZE; i++)
+    {
+        for (uint32_t j = 0; j < GAME_SIZE; j++)
+        {
+            if (j == 0)
+            {
+                std::cout << "#";
+            }
+            if (i == clientInfo.yLoc && j == clientInfo.xLoc)
+            {
+                std::cout << "O";
+            }
+            else if (i == clientInfo.fyLoc && j == clientInfo.fxLoc)
+            {
+                std::cout << "F";
+            }
+            else
+            {
+                std::cout << " ";
+            }
+
+
+            if (j == GAME_SIZE - 1)
+            {
+                std::cout << "#";
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    for (uint32_t i = 0; i < GAME_SIZE+2; i++)
+    {
+        std::cout << "#";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Weapons to deploy: " << clientInfo.weapons << std::endl;
+}
+
+void Get_Input()
+{
+    char inputCh; 
+    if (_kbhit())
+    {
+        inputCh = _getch(); 
+
+        switch (inputCh)
+        {
+        case 'a':
+            clientInfo.input  = IO_LEFT;
+            break;
+        case 'd':
+            clientInfo.input  = IO_RIGHT;
+            break;
+        case 'w':
+            clientInfo.input  = IO_UP;
+            break;
+        case 's':
+            clientInfo.input  = IO_DOWN;
+            break;
+        case ' ':
+            clientInfo.input  = IO_SHOOT;
+            break;
+        case 't':
+            clientInfo.input  = IO_EXIT;
+            break;
+        default:
+            clientInfo.input = IO_NULL;
+            break;
+        }
+    }
+}
+
+// http://paste4btc.com/Lu9Cvpd9
+// https://www.youtube.com/watch?v=E_-lMZDi7Uw
+void Send_Data(uint64_t data)
 {
 
+}
+
+uint32_t main(uint32_t argc, char const *argv[])
+{
     // Driver instantiation and registeration.
     cSockDriver_c * cSockDriver = cSockDriver_Handle::Handler_GetInstance();
+    clientInfo_t clientInfo = (clientInfo_t) (0);
 
     // Game Initialization;
     if (!SetupGame())
     {
         printf("ERROR: Setup Game Failed");
     }
-
+    
     // main game loop
     while(!GAME_OVER)
     {
-
+        Draw_Game();
+        Get_Input();
+        Calculate_GameState();
+        Send_Data(); 
     }
 
     return 0;

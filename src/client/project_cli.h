@@ -35,14 +35,33 @@
 /***** ********************************************************************************************/
 
 
-#define BOARD_SIZE (50)
+#define GAME_SIZE (50)
+
 /*************************************************************************************************/
 /*                            TYPEDEFS & STRUCTURES                                              */
 /*************************************************************************************************/
 
+typedef enum
+{
+    IO_LEFT = 0,
+    IO_RIGHT,
+    IO_UP,
+    IO_DOWN,
+    IO_SHOOT,
+    IO_EXIT,
+    IO_NULL,
+}inputs_e;
+
+
 typedef struct
 {
-    uint8_t clientID;
+    uint8_t  clientID;
+    uint8_t  xLoc;
+    uint8_t  yLoc; 
+    uint8_t  fxLoc;
+    uint8_t  fyLoc;
+    uint8_t  weapons;
+    uint16_t input; 
     // more to come. 
 }clientInfo_t;
 
