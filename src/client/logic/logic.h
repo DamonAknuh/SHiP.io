@@ -26,7 +26,7 @@
 
 #include <stdint.h>
 
-void Calculate_GameState(uint64_t data); 
+void Calculate_GameState(); 
 
 
 

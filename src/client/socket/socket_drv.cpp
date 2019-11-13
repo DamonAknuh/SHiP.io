@@ -55,7 +55,7 @@ cSockDriver_c::cSockDriver_c()
 
 bool cSockDriver_c::cSock_RegisterClient()
 {
-
+    return false; 
 }
 
 

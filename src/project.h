@@ -23,10 +23,11 @@
 
 
 #ifndef __PROJECT_H
-#define __PROJECT_
+ #define __PROJECT_H
 
 #include <winsock2.h>
-
+#include <stdio.h>
+#include <assert.h>
 
 
 /*************************************************************************************************/

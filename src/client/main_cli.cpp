@@ -42,6 +42,10 @@ clientInfo_t clientInfo;
 
 bool SetupGame()
 {
+    // Driver instantiation and registeration.
+    cSockDriver_c * cSockDriver = cSockDriver_Handle::Handler_GetInstance();
+
+
     GAME_OVER = false; 
 
     clientInfo.xLoc = 5;
@@ -49,9 +53,21 @@ bool SetupGame()
     clientInfo.fxLoc = 25;
     clientInfo.fyLoc = 25; 
     clientInfo.weapons = 0; 
+
+    clientInfo.input = IO_NULL;
+
+    // register cleitn program with the server application. 
+    if( cSockDriver->cSock_RegisterClient() == false)
+    {
+        return false; 
+    }
+
     return true;
 }
 
+
+// http://paste4btc.com/Lu9Cvpd9
+// https://www.youtube.com/watch?v=E_-lMZDi7Uw
 void Draw_Game()
 {
     // clear console window.
@@ -137,19 +153,13 @@ void Get_Input()
     }
 }
 
-// http://paste4btc.com/Lu9Cvpd9
-// https://www.youtube.com/watch?v=E_-lMZDi7Uw
-void Send_Data(uint64_t data)
+void Send_Data()
 {
 
 }
 
-uint32_t main(uint32_t argc, char const *argv[])
+int main(int argc, char const *argv[])
 {
-    // Driver instantiation and registeration.
-    cSockDriver_c * cSockDriver = cSockDriver_Handle::Handler_GetInstance();
-    clientInfo_t clientInfo = (clientInfo_t) (0);
-
     // Game Initialization;
     if (!SetupGame())
     {
