@@ -35,7 +35,8 @@
 /***** ********************************************************************************************/
 
 
-#define GAME_SIZE (50)
+#define GAME_SIZE (30)
+#define EFF_GAME_SIZE (GAME_SIZE - 2)
 
 /*************************************************************************************************/
 /*                            TYPEDEFS & STRUCTURES                                              */
@@ -55,9 +56,12 @@ typedef enum
 
 typedef struct
 {
+    uint8_t  GAME_OVER;
     uint8_t  clientID;
     uint8_t  xLoc;
-    uint8_t  yLoc; 
+    uint8_t  yLoc;
+    uint8_t  pxLoc;
+    uint8_t  pyLoc;
     uint8_t  fxLoc;
     uint8_t  fyLoc;
     uint8_t  weapons;

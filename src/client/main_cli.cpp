@@ -27,6 +27,7 @@
 #include <winsock2.h> // for socket implementation. 
 #include <stdbool.h>
 #include <conio.h> // for kbhit and getch.
+#include <windows.h>
 
 
 // Customized Includes
@@ -46,13 +47,19 @@ bool SetupGame()
     cSockDriver_c * cSockDriver = cSockDriver_Handle::Handler_GetInstance();
 
 
-    GAME_OVER = false; 
+    clientInfo.GAME_OVER = false; 
 
+
+    clientInfo.fxLoc = (rand() % EFF_GAME_SIZE) + 1;
+    clientInfo.fyLoc = (rand() % EFF_GAME_SIZE) + 1;
+    clientInfo.weapons = 0;  
+
+    // temporary untill can handle it in sock initialization.
     clientInfo.xLoc = 5;
     clientInfo.yLoc = 5; 
-    clientInfo.fxLoc = 25;
-    clientInfo.fyLoc = 25; 
-    clientInfo.weapons = 0; 
+    clientInfo.pxLoc = 15;
+    clientInfo.pyLoc = 15;
+
 
     clientInfo.input = IO_NULL;
 
@@ -74,53 +81,54 @@ void Draw_Game()
     system ("cls");
 
     // Draw first border. 
-    for (uint32_t i = 0; i < GAME_SIZE+2; i++)
+    for (uint32_t col = 0; col < GAME_SIZE; col++)
     {
-        std::cout << "#";
+        std::cout << "_";
     }
     std::cout << std::endl;
 
-    for (uint32_t i = 0; i < GAME_SIZE; i++)
+    for (uint32_t row = 0; row < GAME_SIZE; row++)
     {
-        for (uint32_t j = 0; j < GAME_SIZE; j++)
+        for (uint32_t col = 0; col < GAME_SIZE; col++)
         {
-            if (j == 0)
+            if (col == 0 || col == (GAME_SIZE-1)) // draw vert borders
             {
-                std::cout << "#";
+                std::cout << "|";
             }
-            if (i == clientInfo.yLoc && j == clientInfo.xLoc)
+            else if (row == clientInfo.yLoc && col == clientInfo.xLoc)
             {
                 std::cout << "O";
             }
-            else if (i == clientInfo.fyLoc && j == clientInfo.fxLoc)
+            else if (row == clientInfo.fyLoc && col == clientInfo.fxLoc)
             {
-                std::cout << "F";
+                std::cout << "+";
+            }
+            else if(row == clientInfo.pyLoc && col == clientInfo.pxLoc)
+            {
+                std::cout << "X";
             }
             else
             {
                 std::cout << " ";
             }
-
-
-            if (j == GAME_SIZE - 1)
-            {
-                std::cout << "#";
-            }
         }
         std::cout << std::endl;
     }
 
-    for (uint32_t i = 0; i < GAME_SIZE+2; i++)
+    for (uint32_t col = 0; col < GAME_SIZE; col++)
     {
-        std::cout << "#";
+        std::cout << "_";
     }
     std::cout << std::endl;
 
     std::cout << "Weapons to deploy: " << clientInfo.weapons << std::endl;
+    Sleep(10);
 }
 
 void Get_Input()
 {
+    clientInfo.input = IO_NULL; // no IO detected
+
     char inputCh; 
     if (_kbhit())
     {
@@ -146,9 +154,6 @@ void Get_Input()
         case 't':
             clientInfo.input  = IO_EXIT;
             break;
-        default:
-            clientInfo.input = IO_NULL;
-            break;
         }
     }
 }
@@ -164,15 +169,18 @@ int main(int argc, char const *argv[])
     if (!SetupGame())
     {
         printf("ERROR: Setup Game Failed");
+        exit(0);
     }
     
     // main game loop
-    while(!GAME_OVER)
+    while(!clientInfo.GAME_OVER)
     {
         Draw_Game();
         Get_Input();
         Calculate_GameState();
-        Send_Data(); 
+        Send_Data();
+         
+        Sleep(5);
     }
 
     return 0;
