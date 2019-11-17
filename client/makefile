@@ -22,8 +22,8 @@
 #                                                                                        #
 ##########################################################################################
 
-TARGET_EXEC ?= SHiP_SER
-TEST_TARGET_EXEC ?= SHiP.ht
+TARGET_EXEC ?= SHIP_CLI
+TEST_TARGET_EXEC ?= SHIP.ht
 
 # Set Compilers to use
 CC  ?= gcc
@@ -49,7 +49,7 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 CPPFLAGS ?= $(INC_FLAGS) -MMD -MP
 
 # Set Various Flags
-DEFINES = -D=
+DEFINES = -D=CLIENT
 
 # Compile Flags and settings
 C_FLAGS   = -std=c11  -Wall -Wextra -Wno-unused-parameter -g 
@@ -57,7 +57,7 @@ CXX_FLAGS = -std=c++11 -Wall -Wextra -Wno-unused-parameter -g
 
 
 $(TARGET_EXEC): $(OBJS)
-	$(CC) $(OBJS) -o $@ $(LDFLAGS) -lstdc++ -lws2_32 -lsqlite3
+	$(CC) $(OBJS) -o $@ $(LDFLAGS) -lstdc++ -lws2_32 
 
 # COMPILATION
 # assembly

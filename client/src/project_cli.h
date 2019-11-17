@@ -28,7 +28,7 @@
 #include <stdint.h>
 
 // program includes. 
-#include "project.h"
+#include "../../include/project.h"
 
 /*************************************************************************************************/
 /*                            GLOBAL DEFINTIONS                                                  */
