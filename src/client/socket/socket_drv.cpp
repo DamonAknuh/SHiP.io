@@ -21,15 +21,20 @@
     SOFTWARE.                                                                               
 **************************************************************************************************/
 
+#include <iostream>
 #include <stdio.h>
-#include "socket_drv.hpp"
+#include <conio.h> 
+#include <ws2tcpip.h>
 
+
+#include "socket_drv.hpp"
 
 /**
  * Initialization functionj for the the socket 
  * Should bind the socket and register the client with the server side application. 
  * 
  * @todo: aknuh add further function infromation
+ * @reference https://github.com/spectre1989/odin/blob/c75d394ef2dfe9d71b8229836a304449f36e1940/code/client.cpp
  */
 cSockDrv_c::cSockDrv_c()
 {
@@ -39,7 +44,7 @@ cSockDrv_c::cSockDrv_c()
 
     if( WSAStartup( winsock_version, &winsock_data ) )
     {
-        printf( "WSAStartup failed: %d", WSAGetLastError() );
+        printf( "\n| ERROR! WSAStartup failed: %d", WSAGetLastError() );
         exit(0);
     }
 
@@ -47,14 +52,33 @@ cSockDrv_c::cSockDrv_c()
 
     if( sock == INVALID_SOCKET )
     {
-        printf( "ERROR! socket failed: %d", WSAGetLastError() );
+        printf( "\n| ERROR! socket failed: %d", WSAGetLastError() );
         exit(0);
     }
-
 }
 
 bool cSockDrv_c::cSock_RegisterClient()
 {
+    bool status = false; 
+    std::string serverAddress; 
+    std::cout << "| Enter the IP address of the server: \n";
+
+    // SET PLAYER ONE CHARACTER
+    while(!status)
+    {
+        std::cout << "| --> Note: Input must in form of [ddd.ddd.ddd.ddd]\n";
+        while(!_kbhit()){} // wait for input 
+        // std::cin>>serverAddress;// "192.168.0.17" 
+        // status = validateIPAddress(serverAddress); //@todo: 
+        serverAddress = "192.168.0.17";
+        status = true; 
+
+        std::cout << "| Entered: "<< serverAddress << std::endl;
+    }
+    char tempCArray[serverAddress.size() + 1];
+    strcpy(tempCArray, serverAddress.c_str());
+    server_address.sin_addr.S_un.S_addr = inet_addr(tempCArray);  // find by command promt ipconfig
+
     return true; 
 }
 

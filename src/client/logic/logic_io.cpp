@@ -179,28 +179,28 @@ void cGObjDrv_c::cGObj_IO_Shoot()
                 // if players are on same plane, and valid shot left. 
                 if ((clientInfo.yLoc == clientInfo.pyLoc) && (clientInfo.xLoc > clientInfo.pxLoc))
                 {
-                    dConsoleDrv->SetPlayerTwoAvatar('X');
+                    dConsoleDrv->Set_PlayerTwoAvatar('X');
                 }
                 break;
 
             case (IO_RIGHT):
                 if ((clientInfo.yLoc == clientInfo.pyLoc) && (clientInfo.xLoc < clientInfo.pxLoc))
                 {
-                    dConsoleDrv->SetPlayerTwoAvatar('X');
+                    dConsoleDrv->Set_PlayerTwoAvatar('X');
                 }
                 break;
 
             case (IO_UP):
                 if ((clientInfo.xLoc == clientInfo.pxLoc) && (clientInfo.yLoc > clientInfo.pyLoc))
                 {
-                    dConsoleDrv->SetPlayerTwoAvatar('X');
+                    dConsoleDrv->Set_PlayerTwoAvatar('X');
                 }
                 break;
 
             case (IO_DOWN):
                 if ((clientInfo.xLoc == clientInfo.pxLoc) && (clientInfo.yLoc < clientInfo.pyLoc))
                 {
-                    dConsoleDrv->SetPlayerTwoAvatar('X');
+                    dConsoleDrv->Set_PlayerTwoAvatar('X');
                 }
                 break;
 

@@ -46,10 +46,9 @@ public:
     void cSock_RecieveData(uint64_t &input);   ///< Manipulates the bmp file into pixel Art.    
 
 private:
-
-    uint8_t clientID; 
     SOCKET sock; 
-    SOCKADDR_IN local_address;
+    SOCKADDR_IN server_address;
+    char packet[SIO_PACKET_SIZE];
 };
 
 typedef handler_c<cSockDrv_c> cSockDriver_Handle;
