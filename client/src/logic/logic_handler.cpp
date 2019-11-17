@@ -21,7 +21,6 @@
 **************************************************************************************************/
 
 #include "project_cli.h"
-#include "project.h"
 #include "logic.h"
 
 #include <cstdlib>

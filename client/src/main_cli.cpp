@@ -31,7 +31,6 @@
 
 
 // Customized Includes
-#include "../project.h"
 #include "project_cli.h"
 #include "socket_drv.hpp"
 #include "logic.h"
