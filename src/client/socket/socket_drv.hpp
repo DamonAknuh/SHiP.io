@@ -29,6 +29,7 @@
 
 // Program Includes. 
 #include "project.h"
+#include "project_cli.h"
 
 /**
  * PLACE HOLDER FOR CLASS INFORMATION
@@ -41,14 +42,18 @@ public:
     
     cSockDrv_c();
     ~cSockDrv_c();
-    bool cSock_RegisterClient();    ///< Parses image header information
-    void cSock_SendData(uint64_t input);     ///< Stores Pixel Array and information
-    void cSock_RecieveData(uint64_t &input);   ///< Manipulates the bmp file into pixel Art.    
+    bool cSock_RegisterClient();
+    bool cSock_SendPacket(clientPacketTypes_e mode);
+    void cSock_RecieveData(uint64_t &input);
+
+private:
+    bool cSock_SendData();
 
 private:
     SOCKET sock; 
     SOCKADDR_IN server_address;
-    char packet[SIO_PACKET_SIZE];
+    char packetBuf[SIO_PACKET_SIZE];
+    uint32_t lastFailed; 
 };
 
 typedef handler_c<cSockDrv_c> cSockDriver_Handle;

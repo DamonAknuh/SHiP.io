@@ -62,6 +62,14 @@ typedef enum
     IO_NULL,
 }inputs_e;
 
+typedef enum
+{
+    CLIENT_DATA = 0,
+    CLIENT_REG  = 1,
+    CLIENT_EXIT = 2,
+    CLIENT_ACK  = 3, 
+} clientPacketTypes_e;
+
 
 typedef struct
 {
@@ -96,10 +104,10 @@ typedef struct
     {
         struct 
         {
-                uint32_t type        : 1; // 0 for registration 1 for input data.
+                uint32_t type        : 4; // 0 for registration 1 for input data.
                 uint32_t clientID    : 1; // client ID for the two client programs.
                 uint32_t state       : 1; // 0 for dead 1 for alive 
-                uint32_t resv        : 13;
+                uint32_t resv        : 10;
                 uint32_t x_loc       : 8;
                 uint32_t y_loc       : 8;
         } data; 
@@ -110,10 +118,11 @@ typedef struct
 
 typedef struct 
 {
+    
     union
     {
-        cData_t data[SIO_MAX_PLAYERS];
-        uint8_t PACKET_DATA[SIO_PACKET_SIZE];
+        cData_t contents[SIO_MAX_PLAYERS];
+        uint8_t PACKET_BYTES[SIO_PACKET_SIZE];
     };
 } clientPacket_t;
 

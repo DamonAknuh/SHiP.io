@@ -28,6 +28,7 @@
 
 
 #include "socket_drv.hpp"
+#include "project_cli.h"
 
 /**
  * Initialization functionj for the the socket 
@@ -36,7 +37,8 @@
  * @todo: aknuh add further function infromation
  * @reference https://github.com/spectre1989/odin/blob/c75d394ef2dfe9d71b8229836a304449f36e1940/code/client.cpp
  */
-cSockDrv_c::cSockDrv_c()
+cSockDrv_c::cSockDrv_c() :
+    lastFailed(0)
 {
     // Initialize the winsock. 
     WORD winsock_version = SIO_WINSOCK_VER;
@@ -44,7 +46,8 @@ cSockDrv_c::cSockDrv_c()
 
     if( WSAStartup( winsock_version, &winsock_data ) )
     {
-        printf( "\n| ERROR! WSAStartup failed: %d", WSAGetLastError() );
+        lastFailed = WSAGetLastError();
+        printf( "\n| ERROR! WSAStartup failed: %d", lastFailed);
         exit(0);
     }
 
@@ -52,7 +55,8 @@ cSockDrv_c::cSockDrv_c()
 
     if( sock == INVALID_SOCKET )
     {
-        printf( "\n| ERROR! socket failed: %d", WSAGetLastError() );
+        lastFailed = WSAGetLastError();
+        printf( "\n| ERROR! socket failed: %d", lastFailed);
         exit(0);
     }
 }
@@ -71,7 +75,7 @@ bool cSockDrv_c::cSock_RegisterClient()
         // std::cin>>serverAddress;// "192.168.0.17" 
         // status = validateIPAddress(serverAddress); //@todo: 
         serverAddress = "192.168.0.17";
-        status = true; 
+        status = true;  // temp
 
         std::cout << "| Entered: "<< serverAddress << std::endl;
     }
@@ -79,13 +83,64 @@ bool cSockDrv_c::cSock_RegisterClient()
     strcpy(tempCArray, serverAddress.c_str());
     server_address.sin_addr.S_un.S_addr = inet_addr(tempCArray);  // find by command promt ipconfig
 
+    if (!cSock_SendPacket(CLIENT_REG))
+    {
+        return false; 
+    }
+
+    return true; 
+}
+
+bool cSockDrv_c::cSock_SendData()
+{
+    bool flags = 0;
+    if(SOCKET_ERROR == 
+        sendto(sock, packetBuf, SIO_PACKET_SIZE, flags, (SOCKADDR*)&server_address, sizeof( server_address )))
+    {
+        printf( "Sendto failed: %d", WSAGetLastError());
+        return false;
+    }
+
     return true; 
 }
 
 
-void cSockDrv_c::cSock_SendData(uint64_t input)
+bool cSockDrv_c::cSock_SendPacket(clientPacketTypes_e mode)
 {
+    clientPacket_t * const packetInfo = (clientPacket_t*) packetBuf;
 
+    packetInfo->contents[0].bits = 0;
+
+    switch (mode)
+    {
+        case CLIENT_DATA:
+            packetInfo->contents[0].data.type = CLIENT_DATA;
+
+            break;
+        case CLIENT_ACK:
+            packetInfo->contents[0].data.type = CLIENT_ACK;
+
+            break;
+
+        case CLIENT_EXIT:
+            packetInfo->contents[0].data.type = CLIENT_EXIT;
+
+            break;
+        
+        case CLIENT_REG:
+            packetInfo->contents[0].data.type = CLIENT_REG;
+
+            if (!cSock_SendData())
+            { 
+                return false; 
+            }
+            break;
+        
+        default: // unknown mode detected
+            return false; 
+    }
+
+    return true;
 }
 
 void cSockDrv_c::cSock_RecieveData(uint64_t &input)
@@ -96,6 +151,10 @@ void cSockDrv_c::cSock_RecieveData(uint64_t &input)
 
 cSockDrv_c::~cSockDrv_c()
 {
-
+    // attempt to show last error condition before exit. 
+    if(!lastFailed)
+    {
+        std::cout<< "LAST FAILED: " <<  lastFailed << std::endl;
+    }
     WSACleanup();
 }
