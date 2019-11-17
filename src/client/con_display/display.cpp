@@ -22,6 +22,7 @@
 // library includes.
 #include <iostream>
 #include <stdint.h>
+#include <conio.h> // for kbhit and getch.
 
 // program includes
 #include "project_cli.h"
@@ -86,7 +87,7 @@ bool dConsoleDrv_c::ValidateAvatar(char avatar)
 
 
 
-bool dConsoleDrv_c::SetPlayerTwoAvatar(char avatar)
+bool dConsoleDrv_c::Set_PlayerTwoAvatar(char avatar)
 {
     if (ValidateAvatar(avatar))
     {
@@ -97,11 +98,11 @@ bool dConsoleDrv_c::SetPlayerTwoAvatar(char avatar)
     return false; 
 }
 
-bool dConsoleDrv_c::SetPlayerOneAvatar(char avatar)
+bool dConsoleDrv_c::Set_PlayerOneAvatar(char avatar)
 {
     if (ValidateAvatar(avatar))
     {
-        player2 = avatar;
+        player1 = avatar;
         return true; 
     }
 
@@ -182,10 +183,42 @@ void dConsoleDrv_c::Draw_Game()
     Sleep(10);
 }
 
+void dConsoleDrv_c::Setup_Avatars()
+{
+    bool status = false; 
+    char chInput;
+
+    std::cout << "| Please Input a character for your ship\n";
+
+    // SET PLAYER ONE CHARACTER
+    while(!status)
+    {
+        std::cout << "| --> Note: Input must be an non-control character and not one of: '-' , '|' , '_ ' , ' '\n";
+        while(!_kbhit()){} // wait for input 
+        chInput = _getch();
+        status = Set_PlayerOneAvatar(chInput);
+        std::cout << "| Entered: "<< chInput << std::endl;
+    }
+
+    // SET PLAYER TWO CHARACTER
+    status = false; 
+    std::cout << "\n|\n| Please Input a character for your enemy ship\n";
+
+    while(!status)
+    {
+        std::cout << "| --> Note: Input must be an non-control character and not one of: [-|_s ]'\n";
+        while(!_kbhit()){} // wait for input 
+        chInput = _getch();
+        status = Set_PlayerTwoAvatar(chInput);
+        std::cout << "| Entered: "<< chInput << std::endl;
+    }
+}
+
 dConsoleDrv_c::dConsoleDrv_c() :
     player1(DEFAULT_P1),
     player2(DEFAULT_P2)
 {
+
 }
 
 dConsoleDrv_c::~dConsoleDrv_c()

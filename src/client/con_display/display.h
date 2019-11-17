@@ -35,9 +35,10 @@ private:
     char ShotHandler(uint32_t row, uint32_t col);
 
 public:
-    bool SetPlayerOneAvatar(char avatar);
-    bool SetPlayerTwoAvatar(char avatar);
+    bool Set_PlayerOneAvatar(char avatar);
+    bool Set_PlayerTwoAvatar(char avatar);
     void Draw_Game();
+    void Setup_Avatars();
 
 
     dConsoleDrv_c(/* args */);
