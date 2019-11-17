@@ -35,8 +35,17 @@
 /***** ********************************************************************************************/
 
 
-#define GAME_SIZE (30)
-#define EFF_GAME_SIZE (GAME_SIZE - 2)
+#define UP_SHOT             (0)
+#define DOWN_SHOT           (1)
+#define LEFT_SHOT           (2)
+#define RIGHT_SHOT          (3)
+
+#define DEFAULT_P1          ('O')
+#define DEFAULT_P2          ('@')
+
+#define SHOT_MAX_FRAMES      (2)
+#define GAME_SIZE           (30)
+#define EFF_GAME_SIZE       (GAME_SIZE - 2)
 
 /*************************************************************************************************/
 /*                            TYPEDEFS & STRUCTURES                                              */
@@ -58,14 +67,20 @@ typedef struct
 {
     uint8_t  GAME_OVER;
     uint8_t  clientID;
+    
+
     uint8_t  xLoc;
     uint8_t  yLoc;
+    uint8_t  weapons; 
+    uint16_t input;
+    uint16_t impInput;
+    uint8_t  shotCounter;
+
     uint8_t  pxLoc;
     uint8_t  pyLoc;
+
     uint8_t  fxLoc;
     uint8_t  fyLoc;
-    uint8_t  weapons;
-    uint16_t input; 
     // more to come. 
 }clientInfo_t;
 

@@ -35,39 +35,54 @@
 #include "project_cli.h"
 #include "socket_drv.hpp"
 #include "logic.h"
+#include "display.h"
+
 
 // GLOBAL VARIABLE.
 // TODO: extern in header file. 
 bool GAME_OVER = false;
+char player2Ava = 'X';
+char player1Ava = '@';
+
 clientInfo_t clientInfo;
 
 bool SetupGame()
 {
     // Driver instantiation and registeration.
-    cSockDriver_c * cSockDriver = cSockDriver_Handle::Handler_GetInstance();
+    cSockDrv_c * cSockDriver = cSockDriver_Handle::Handler_GetInstance();
+    cGObjDrv_c * cGObjDrv = cGObjDrv_Handle::Handler_GetInstance();
+     dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
 
+    char p1Avatar;
+    char p2Avatar;
+    bool status = false; 
 
-    clientInfo.GAME_OVER = false; 
+    std::cout << "WELCOME TO THE SHiP.IO GAME!\n|\n";
+    std::cout << "| Please Input a character for your ship\n";
 
-
-    clientInfo.fxLoc = (rand() % EFF_GAME_SIZE) + 1;
-    clientInfo.fyLoc = (rand() % EFF_GAME_SIZE) + 1;
-    clientInfo.weapons = 0;  
-
-    // temporary untill can handle it in sock initialization.
-    clientInfo.xLoc = 5;
-    clientInfo.yLoc = 5; 
-    clientInfo.pxLoc = 15;
-    clientInfo.pyLoc = 15;
-
-
-    clientInfo.input = IO_NULL;
-
+    while(!status)
+    {
+        std::cout << "| [Input must be an non-control character and not '-' , '|' , '_ ' , ' '] :\n";
+        while(!_kbhit()){} // wait for input 
+        status = SetPlayerOneAvatar()
+    }
+    
     // register cleitn program with the server application. 
     if( cSockDriver->cSock_RegisterClient() == false)
     {
         return false; 
     }
+
+    cGObjDrv_c * cGObjDrv = cGObjDrv_Handle::Handler_GetInstance();
+
+    if (cGObjDrv->cGObj_InitCInfo() == false)
+    {
+        return false; 
+    }
+
+    // @todo read console input and set player characters. 
+    dConsoleDrv->SetPlayerOneAvatar('O');
+    dConsoleDrv->SetPlayerOneAvatar('@');
 
     return true;
 }
@@ -77,52 +92,9 @@ bool SetupGame()
 // https://www.youtube.com/watch?v=E_-lMZDi7Uw
 void Draw_Game()
 {
-    // clear console window.
-    system ("cls");
+    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
 
-    // Draw first border. 
-    for (uint32_t col = 0; col < GAME_SIZE; col++)
-    {
-        std::cout << "_";
-    }
-    std::cout << std::endl;
-
-    for (uint32_t row = 0; row < GAME_SIZE; row++)
-    {
-        for (uint32_t col = 0; col < GAME_SIZE; col++)
-        {
-            if (col == 0 || col == (GAME_SIZE-1)) // draw vert borders
-            {
-                std::cout << "|";
-            }
-            else if (row == clientInfo.yLoc && col == clientInfo.xLoc)
-            {
-                std::cout << "O";
-            }
-            else if (row == clientInfo.fyLoc && col == clientInfo.fxLoc)
-            {
-                std::cout << "+";
-            }
-            else if(row == clientInfo.pyLoc && col == clientInfo.pxLoc)
-            {
-                std::cout << "X";
-            }
-            else
-            {
-                std::cout << " ";
-            }
-        }
-        std::cout << std::endl;
-    }
-
-    for (uint32_t col = 0; col < GAME_SIZE; col++)
-    {
-        std::cout << "_";
-    }
-    std::cout << std::endl;
-
-    std::cout << "Weapons to deploy: " << clientInfo.weapons << std::endl;
-    Sleep(10);
+    dConsoleDrv->Draw_Game();
 }
 
 void Get_Input()
@@ -179,7 +151,7 @@ int main(int argc, char const *argv[])
         Get_Input();
         Calculate_GameState();
         Send_Data();
-         
+
         Sleep(5);
     }
 
