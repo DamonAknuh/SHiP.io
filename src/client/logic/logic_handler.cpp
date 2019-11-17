@@ -20,38 +20,82 @@
     SOFTWARE.                                                                               
 **************************************************************************************************/
 
-
-#ifndef __LOGIC_H
-#define __LOGIC_H
-
-#include <stdint.h>
 #include "project_cli.h"
+#include "project.h"
+#include "logic.h"
 
-void Calculate_GameState(); 
+#include <cstdlib>
 
 
-class cGObjDrv_c
+cGObjDrv_c::cGObjDrv_c()
 {
-private:
-    /* Data */
+
+}
+
+bool cGObjDrv_c::cGObj_InitCInfo()
+{
+    // randomly spawn fruit on map
+    clientInfo.fxLoc = (rand() % EFF_GAME_SIZE) + 1;
+    clientInfo.fyLoc = (rand() % EFF_GAME_SIZE) + 1;
+
+    // set weapons to 0
+    clientInfo.weapons = 0;  
+    clientInfo.shotCounter = 0;
+
+    // temporary untill can handle it in sock initialization.
+    // todo make logic layer a class driver object. 
+    clientInfo.xLoc = 5;
+    clientInfo.yLoc = 5;
+    clientInfo.impInput = IO_NULL; // reset shot to zero
     
-public:
 
-    // I/O Functions
-    void cGObj_IO_Up();
-    void cGObj_IO_Down();
-    void cGObj_IO_Left();
-    void cGObj_IO_Right();
-    void cGObj_IO_Shoot();
-    void cGObj_IO_Exit();
 
-    // Initialization
-    cGObjDrv_c();
-    bool cGObj_InitCInfo();
+    clientInfo.pxLoc = 25;
+    clientInfo.pyLoc = 15;
 
-    ~cGObjDrv_c();
-};
 
-typedef handler_c<cGObjDrv_c> cGObjDrv_Handle;
+    clientInfo.input = IO_NULL;
 
-#endif // __LOGIC_H
+    clientInfo.GAME_OVER = false; 
+
+    return true; 
+}
+
+cGObjDrv_c::~cGObjDrv_c()
+{
+    // no-op
+}
+
+
+void Calculate_GameState()
+{
+    cGObjDrv_c * cGObjDrv = cGObjDrv_Handle::Handler_GetInstance();
+
+    switch(clientInfo.input)
+    {
+        case (IO_LEFT):
+            cGObjDrv->cGObj_IO_Left();
+            break;
+
+        case (IO_RIGHT):
+            cGObjDrv->cGObj_IO_Right();
+            break;
+
+        case (IO_UP):
+            cGObjDrv->cGObj_IO_Up();
+            break;
+
+        case (IO_DOWN):
+            cGObjDrv->cGObj_IO_Down();
+            break;
+
+        case (IO_SHOOT):
+            cGObjDrv->cGObj_IO_Shoot();
+            break;
+
+        case (IO_EXIT):
+            cGObjDrv->cGObj_IO_Exit();
+            break;
+    }
+}
+

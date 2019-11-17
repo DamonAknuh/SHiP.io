@@ -24,14 +24,15 @@
 #include "project_cli.h"
 #include "project.h"
 #include "logic.h"
+#include "display.h"
 
 #include <cstdlib>
 
-void Logic_IO_Up()
+void cGObjDrv_c::cGObj_IO_Up()
 {
     int8_t tempYLoc = clientInfo.yLoc-1;
 
-    if ((tempYLoc != clientInfo.pyLoc) && (clientInfo.xLoc != clientInfo.pxLoc)) // handle player player conflict. 
+    if ((tempYLoc != clientInfo.pyLoc) || (clientInfo.xLoc != clientInfo.pxLoc)) // handle player player conflict. 
     {
         if (tempYLoc < 0)
         {
@@ -52,15 +53,21 @@ void Logic_IO_Up()
             clientInfo.fyLoc = rand() % EFF_GAME_SIZE;
         }
         clientInfo.yLoc = tempYLoc;
+
+        // Only want to save last input when not currently shooting lasers. 
+        if (!clientInfo.shotCounter)
+        {
+            clientInfo.impInput = IO_UP;
+        }
     }
 }
 
 
-void Logic_IO_Down()
+void cGObjDrv_c::cGObj_IO_Down()
 {
     uint8_t tempYLoc = clientInfo.yLoc + 1;
 
-    if ((tempYLoc != clientInfo.pyLoc) && (clientInfo.xLoc != clientInfo.pxLoc)) // handle player player conflict. 
+    if ((tempYLoc != clientInfo.pyLoc) || (clientInfo.xLoc != clientInfo.pxLoc)) // handle player player conflict. 
     {
         tempYLoc = tempYLoc % EFF_GAME_SIZE;
 
@@ -76,17 +83,23 @@ void Logic_IO_Down()
 
 
         clientInfo.yLoc = tempYLoc;
+
+        // Only want to save last input when not currently shooting lasers. 
+        if (!clientInfo.shotCounter)
+        {
+            clientInfo.impInput = IO_DOWN;
+        }
     }
 
 }
 
     
 
-void Logic_IO_Right()
+void cGObjDrv_c::cGObj_IO_Right()
 {
     uint8_t tempXLoc = clientInfo.xLoc + 1;
 
-    if ((tempXLoc != clientInfo.pxLoc) && (clientInfo.yLoc != clientInfo.pyLoc)) // handle player player conflict. 
+    if ((tempXLoc != clientInfo.pxLoc) || (clientInfo.yLoc != clientInfo.pyLoc)) // handle player player conflict. 
     {
         tempXLoc = tempXLoc % EFF_GAME_SIZE;
 
@@ -99,17 +112,22 @@ void Logic_IO_Right()
             clientInfo.fxLoc = rand() % EFF_GAME_SIZE;
             clientInfo.fyLoc = rand() % EFF_GAME_SIZE;
         }
-        
-        
-           clientInfo.xLoc = tempXLoc;
+
+        clientInfo.xLoc = tempXLoc;
+
+        // Only want to save last input when not currently shooting lasers. 
+        if (!clientInfo.shotCounter)
+        {
+            clientInfo.impInput = IO_RIGHT;
+        }
     } 
 }
 
-void Logic_IO_Left()
+void cGObjDrv_c::cGObj_IO_Left()
 {
     int8_t tempXLoc = clientInfo.xLoc - 1;
 
-    if ((tempXLoc != clientInfo.pxLoc) && (clientInfo.yLoc != clientInfo.pyLoc)) // handle player player conflict. 
+    if ((tempXLoc != clientInfo.pxLoc) || (clientInfo.yLoc != clientInfo.pyLoc)) // handle player player conflict. 
     {
         if (tempXLoc < 0)
         {
@@ -132,40 +150,66 @@ void Logic_IO_Left()
 
 
         clientInfo.xLoc = tempXLoc;
+
+        // Only want to save last input when not currently shooting lasers. 
+        if (!clientInfo.shotCounter)
+        {
+            clientInfo.impInput = IO_LEFT;
+        }
+        
     }
 }
 
 
-void Logic_IO_Exit()
+void cGObjDrv_c::cGObj_IO_Exit()
 {
 
+
+    clientInfo.GAME_OVER = true;
 }
 
-
-void Calculate_GameState()
+void cGObjDrv_c::cGObj_IO_Shoot()
 {
-    switch(clientInfo.input)
-    {
-        case (IO_LEFT):
-            Logic_IO_Left();
-            break;
+    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
 
-        case (IO_RIGHT):
-            Logic_IO_Right();
-            break;
+    if (clientInfo.weapons && !clientInfo.shotCounter){ // check that player has a weapon to use and not currently cooling down. 
+        switch (clientInfo.impInput)
+        {
+            case (IO_LEFT):
+                // if players are on same plane, and valid shot left. 
+                if ((clientInfo.yLoc == clientInfo.pyLoc) && (clientInfo.xLoc > clientInfo.pxLoc))
+                {
+                    dConsoleDrv->SetPlayerTwoAvatar('X');
+                }
+                break;
 
-        case (IO_UP):
-            Logic_IO_Up();
-            break;
+            case (IO_RIGHT):
+                if ((clientInfo.yLoc == clientInfo.pyLoc) && (clientInfo.xLoc < clientInfo.pxLoc))
+                {
+                    dConsoleDrv->SetPlayerTwoAvatar('X');
+                }
+                break;
 
-        case (IO_DOWN):
-            Logic_IO_Down();
-            break;
+            case (IO_UP):
+                if ((clientInfo.xLoc == clientInfo.pxLoc) && (clientInfo.yLoc > clientInfo.pyLoc))
+                {
+                    dConsoleDrv->SetPlayerTwoAvatar('X');
+                }
+                break;
 
-        case (IO_EXIT):
-            clientInfo.GAME_OVER = true;
-            break;
+            case (IO_DOWN):
+                if ((clientInfo.xLoc == clientInfo.pxLoc) && (clientInfo.yLoc < clientInfo.pyLoc))
+                {
+                    dConsoleDrv->SetPlayerTwoAvatar('X');
+                }
+                break;
+
+            case (IO_NULL): // initial condition for shooting. nothing happens. 
+            default:
+                break;
+        }
+        clientInfo.shotCounter = 1; 
+        clientInfo.weapons--;
     }
-
+   
 }
-
