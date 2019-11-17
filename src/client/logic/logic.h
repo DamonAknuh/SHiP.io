@@ -29,7 +29,11 @@
 
 void Calculate_GameState(); 
 
-
+/**
+ * PLACE HOLDER FOR CLASS INFORMATION
+ * 
+ * @TODO: aknuh add class infromation
+ */
 class cGObjDrv_c
 {
 private:

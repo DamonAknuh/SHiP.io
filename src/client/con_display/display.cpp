@@ -180,7 +180,7 @@ void dConsoleDrv_c::Draw_Game()
         
     }
 
-    Sleep(10);
+    // Sleep(10);
 }
 
 void dConsoleDrv_c::Setup_Avatars()

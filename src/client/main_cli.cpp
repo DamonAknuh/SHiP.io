@@ -39,6 +39,21 @@
 
 clientInfo_t clientInfo;
 
+bool Game_Over()
+{
+
+    cSockDrv_c * cSockDriver    = cSockDriver_Handle::Handler_GetInstance();
+    cSockDriver->cSock_SendPacket(CLIENT_EXIT);
+
+    std::cout << std::endl;
+    std::cout << "________________________________" << std::endl;
+    std::cout << "|--------~!GAME OVER!~---------|" << std::endl;
+    std::cout << "|------Thanks for Playing!-----|" << std::endl;
+    std::cout << "|______________________________|" << std::endl;
+
+    return true;
+}
+
 bool SetupGame()
 {
     // Driver instantiation and registeration.
@@ -117,6 +132,7 @@ void Send_Data()
 int main(int argc, char const *argv[])
 {
     std::cout << "WELCOME TO THE SHiP.IO GAME!\n|\n";
+
     // Game Initialization;
     if (!SetupGame())
     {
@@ -132,8 +148,11 @@ int main(int argc, char const *argv[])
         Calculate_GameState();
         Send_Data();
 
-        Sleep(5);
+        // Sleep(5);
     }
+    Draw_Game();
+
+    Game_Over();
 
     return 0;
 }

@@ -24,6 +24,11 @@
 #define __DISPLAY_H
 
 
+/**
+ * PLACE HOLDER FOR CLASS INFORMATION
+ * 
+ * @TODO: aknuh add class infromation
+ */
 class dConsoleDrv_c
 {
 private:

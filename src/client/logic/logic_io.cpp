@@ -163,8 +163,6 @@ void cGObjDrv_c::cGObj_IO_Left()
 
 void cGObjDrv_c::cGObj_IO_Exit()
 {
-
-
     clientInfo.GAME_OVER = true;
 }
 
@@ -180,6 +178,7 @@ void cGObjDrv_c::cGObj_IO_Shoot()
                 if ((clientInfo.yLoc == clientInfo.pyLoc) && (clientInfo.xLoc > clientInfo.pxLoc))
                 {
                     dConsoleDrv->Set_PlayerTwoAvatar('X');
+                    clientInfo.GAME_OVER = true; 
                 }
                 break;
 
@@ -187,6 +186,7 @@ void cGObjDrv_c::cGObj_IO_Shoot()
                 if ((clientInfo.yLoc == clientInfo.pyLoc) && (clientInfo.xLoc < clientInfo.pxLoc))
                 {
                     dConsoleDrv->Set_PlayerTwoAvatar('X');
+                    clientInfo.GAME_OVER = true; 
                 }
                 break;
 
@@ -194,6 +194,7 @@ void cGObjDrv_c::cGObj_IO_Shoot()
                 if ((clientInfo.xLoc == clientInfo.pxLoc) && (clientInfo.yLoc > clientInfo.pyLoc))
                 {
                     dConsoleDrv->Set_PlayerTwoAvatar('X');
+                    clientInfo.GAME_OVER = true; 
                 }
                 break;
 
@@ -201,6 +202,7 @@ void cGObjDrv_c::cGObj_IO_Shoot()
                 if ((clientInfo.xLoc == clientInfo.pxLoc) && (clientInfo.yLoc < clientInfo.pyLoc))
                 {
                     dConsoleDrv->Set_PlayerTwoAvatar('X');
+                    clientInfo.GAME_OVER = true; 
                 }
                 break;
 
