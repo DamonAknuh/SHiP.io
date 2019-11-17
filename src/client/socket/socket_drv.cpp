@@ -31,7 +31,7 @@
  * 
  * @todo: aknuh add further function infromation
  */
-cSockDriver_c::cSockDriver_c()
+cSockDrv_c::cSockDrv_c()
 {
     // Initialize the winsock. 
     WORD winsock_version = SIO_WINSOCK_VER;
@@ -53,24 +53,24 @@ cSockDriver_c::cSockDriver_c()
 
 }
 
-bool cSockDriver_c::cSock_RegisterClient()
+bool cSockDrv_c::cSock_RegisterClient()
 {
     return true; 
 }
 
 
-void cSockDriver_c::cSock_SendData(uint64_t input)
+void cSockDrv_c::cSock_SendData(uint64_t input)
 {
 
 }
 
-void cSockDriver_c::cSock_RecieveData(uint64_t &input)
+void cSockDrv_c::cSock_RecieveData(uint64_t &input)
 {
 
 }
 
 
-cSockDriver_c::~cSockDriver_c()
+cSockDrv_c::~cSockDrv_c()
 {
 
     WSACleanup();

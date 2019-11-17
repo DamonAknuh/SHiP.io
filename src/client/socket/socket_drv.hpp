@@ -35,12 +35,12 @@
  * 
  * @TODO: aknuh add class infromation
  */
-class cSockDriver_c
+class cSockDrv_c
 {
 public:
     
-    cSockDriver_c();
-    ~cSockDriver_c();
+    cSockDrv_c();
+    ~cSockDrv_c();
     bool cSock_RegisterClient();    ///< Parses image header information
     void cSock_SendData(uint64_t input);     ///< Stores Pixel Array and information
     void cSock_RecieveData(uint64_t &input);   ///< Manipulates the bmp file into pixel Art.    
@@ -52,7 +52,7 @@ private:
     SOCKADDR_IN local_address;
 };
 
-typedef handler_c<cSockDriver_c> cSockDriver_Handle;
+typedef handler_c<cSockDrv_c> cSockDriver_Handle;
 
 
 #endif // __SOCKET_DRV_H
