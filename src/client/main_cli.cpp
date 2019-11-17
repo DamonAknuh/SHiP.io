@@ -37,35 +37,20 @@
 #include "logic.h"
 #include "display.h"
 
-
-// GLOBAL VARIABLE.
-// TODO: extern in header file. 
-bool GAME_OVER = false;
-char player2Ava = 'X';
-char player1Ava = '@';
-
 clientInfo_t clientInfo;
 
 bool SetupGame()
 {
     // Driver instantiation and registeration.
-    cSockDrv_c * cSockDriver = cSockDriver_Handle::Handler_GetInstance();
-    cGObjDrv_c * cGObjDrv = cGObjDrv_Handle::Handler_GetInstance();
-     dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
+    // Socket Driver
+    cSockDrv_c * cSockDriver    = cSockDriver_Handle::Handler_GetInstance();
+    // Game object Driver
+    cGObjDrv_c * cGObjDrv       = cGObjDrv_Handle::Handler_GetInstance();
+    // Output driver
+    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
 
-    char p1Avatar;
-    char p2Avatar;
-    bool status = false; 
-
-    std::cout << "WELCOME TO THE SHiP.IO GAME!\n|\n";
-    std::cout << "| Please Input a character for your ship\n";
-
-    while(!status)
-    {
-        std::cout << "| [Input must be an non-control character and not '-' , '|' , '_ ' , ' '] :\n";
-        while(!_kbhit()){} // wait for input 
-        status = SetPlayerOneAvatar()
-    }
+    // input functiont to grab the ASCII characters to represent the ships. 
+    dConsoleDrv->Setup_Avatars();
     
     // register cleitn program with the server application. 
     if( cSockDriver->cSock_RegisterClient() == false)
@@ -73,16 +58,10 @@ bool SetupGame()
         return false; 
     }
 
-    cGObjDrv_c * cGObjDrv = cGObjDrv_Handle::Handler_GetInstance();
-
     if (cGObjDrv->cGObj_InitCInfo() == false)
     {
         return false; 
     }
-
-    // @todo read console input and set player characters. 
-    dConsoleDrv->SetPlayerOneAvatar('O');
-    dConsoleDrv->SetPlayerOneAvatar('@');
 
     return true;
 }
@@ -137,6 +116,7 @@ void Send_Data()
 
 int main(int argc, char const *argv[])
 {
+    std::cout << "WELCOME TO THE SHiP.IO GAME!\n|\n";
     // Game Initialization;
     if (!SetupGame())
     {
