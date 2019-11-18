@@ -21,8 +21,8 @@
 **************************************************************************************************/
 
 
-#ifndef __LOGIC_H
-#define __LOGIC_H
+#ifndef __CLOGIC_H
+#define __CLOGIC_H
 
 #include <stdint.h>
 #include "project_cli.h"
@@ -58,4 +58,4 @@ public:
 
 typedef handler_c<cGObjDrv_c> cGObjDrv_Handle;
 
-#endif // __LOGIC_H
+#endif // __CLOGIC_H

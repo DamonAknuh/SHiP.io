@@ -20,8 +20,6 @@
     SOFTWARE.                                                                               
 **************************************************************************************************/
 
-
-
 #ifndef __PROJECT_H
  #define __PROJECT_H
 
@@ -34,14 +32,17 @@
 /*                            GLOBAL DEFINTIONS                                                  */
 /*************************************************************************************************/
 
-#define SIO_WINSOCK_VER     (0x202)
-#define SIO_ADDRESS_FAMILY  (AF_INET)
-#define SIO_SOCKET_TYPE     (SOCK_DGRAM)
-#define SIO_SOCKET_PTCOL    (IPPROTO_UDP)
-#define SIO_PORT_BINDING    (9999)
+#define SIO_WINSOCK_VER         (0x202)
+#define SIO_ADDRESS_FAMILY      (AF_INET)
+#define SIO_SOCKET_TYPE         (SOCK_DGRAM)
+#define SIO_SOCKET_PTCOL        (IPPROTO_UDP)
+#define SIO_PORT_BINDING        (9999)
 
-#define SIO_MAX_PLAYERS     (2)
-#define SIO_PACKET_SIZE     (256)
+#define SIO_MAX_PLAYERS         (2)
+#define SIO_PACKET_SIZE         (256)
+#define SIO_GAME_SIZE           (30)
+#define SIO_EFF_GAME_SIZE       (SIO_GAME_SIZE - 2)
+
 
 
 /*************************************************************************************************/

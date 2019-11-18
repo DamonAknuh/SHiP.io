@@ -115,18 +115,18 @@ void dConsoleDrv_c::Draw_Game()
     system ("cls");
 
     // Draw first border. 
-    for (uint32_t col = 0; col < GAME_SIZE; col++)
+    for (uint32_t col = 0; col < SIO_GAME_SIZE; col++)
     {
         std::cout << "_";
     }
     std::cout << std::endl;
 
     // draw main output
-    for (uint32_t row = 0; row < GAME_SIZE; row++)
+    for (uint32_t row = 0; row < SIO_GAME_SIZE; row++)
     {
-        for (uint32_t col = 0; col < GAME_SIZE; col++)
+        for (uint32_t col = 0; col < SIO_GAME_SIZE; col++)
         {
-            if (col == 0 || col == (GAME_SIZE-1)) // Draw vert borders
+            if (col == 0 || col == (SIO_GAME_SIZE-1)) // Draw vert borders
             {
                 std::cout << "|";
             }
@@ -156,7 +156,7 @@ void dConsoleDrv_c::Draw_Game()
 
     // print bottom  border
     std::cout << "|";
-    for (uint32_t col = 0; col < GAME_SIZE - 2; col++)
+    for (uint32_t col = 0; col < SIO_GAME_SIZE - 2; col++)
     {
         std::cout << "_";
     }

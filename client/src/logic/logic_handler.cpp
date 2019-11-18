@@ -21,7 +21,7 @@
 **************************************************************************************************/
 
 #include "project_cli.h"
-#include "logic.h"
+#include "clogic.h"
 
 #include <cstdlib>
 
@@ -34,8 +34,8 @@ cGObjDrv_c::cGObjDrv_c()
 bool cGObjDrv_c::cGObj_InitCInfo()
 {
     // randomly spawn fruit on map
-    clientInfo.fxLoc = (rand() % EFF_GAME_SIZE) + 1;
-    clientInfo.fyLoc = (rand() % EFF_GAME_SIZE) + 1;
+    clientInfo.fxLoc = (rand() % SIO_EFF_GAME_SIZE) + 1;
+    clientInfo.fyLoc = (rand() % SIO_EFF_GAME_SIZE) + 1;
 
     // set weapons to 0
     clientInfo.weapons = 0;  

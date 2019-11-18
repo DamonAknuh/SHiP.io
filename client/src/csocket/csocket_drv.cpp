@@ -81,6 +81,9 @@ bool cSockDrv_c::cSock_RegisterClient()
     }
     char tempCArray[serverAddress.size() + 1];
     strcpy(tempCArray, serverAddress.c_str());
+
+    server_address.sin_family = SIO_ADDRESS_FAMILY;
+    server_address.sin_port = htons( SIO_PORT_BINDING );
     server_address.sin_addr.S_un.S_addr = inet_addr(tempCArray);  // find by command promt ipconfig
 
     if (!cSock_SendPacket(CLIENT_REG))

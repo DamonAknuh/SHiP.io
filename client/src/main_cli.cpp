@@ -33,7 +33,7 @@
 // Customized Includes
 #include "project_cli.h"
 #include "csocket_drv.hpp"
-#include "logic.h"
+#include "clogic.h"
 #include "display.h"
 
 clientInfo_t clientInfo;
@@ -134,7 +134,7 @@ int main(int argc, char const *argv[])
     std::cout << "________________________________" << std::endl;
     std::cout << "|---------~!WELCOME!~----------|" << std::endl;
     std::cout << "|------------------------------|" << std::endl;
-    std::cout << "|---------TO SHiP.IO!----------|" << std::endl;
+    std::cout << "|---------TO SHiP.IO-----------|" << std::endl;
     std::cout << "|______________________________|" << std::endl;
 
     // Game Initialization;

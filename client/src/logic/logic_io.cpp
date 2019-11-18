@@ -22,7 +22,7 @@
 
 
 #include "project_cli.h"
-#include "logic.h"
+#include "clogic.h"
 #include "display.h"
 
 #include <cstdlib>
@@ -35,9 +35,9 @@ void cGObjDrv_c::cGObj_IO_Up()
     {
         if (tempYLoc < 0)
         {
-            tempYLoc = GAME_SIZE-1;
+            tempYLoc = SIO_GAME_SIZE-1;
         }
-        else if(tempYLoc > GAME_SIZE)
+        else if(tempYLoc > SIO_GAME_SIZE)
         {
             tempYLoc = 1; 
         }
@@ -48,8 +48,8 @@ void cGObjDrv_c::cGObj_IO_Up()
             clientInfo.weapons++;
 
             // spwan the fruit randomly again. 
-            clientInfo.fxLoc = rand() % EFF_GAME_SIZE;
-            clientInfo.fyLoc = rand() % EFF_GAME_SIZE;
+            clientInfo.fxLoc = rand() % SIO_EFF_GAME_SIZE;
+            clientInfo.fyLoc = rand() % SIO_EFF_GAME_SIZE;
         }
         clientInfo.yLoc = tempYLoc;
 
@@ -68,7 +68,7 @@ void cGObjDrv_c::cGObj_IO_Down()
 
     if ((tempYLoc != clientInfo.pyLoc) || (clientInfo.xLoc != clientInfo.pxLoc)) // handle player player conflict. 
     {
-        tempYLoc = tempYLoc % EFF_GAME_SIZE;
+        tempYLoc = tempYLoc % SIO_EFF_GAME_SIZE;
 
         if((tempYLoc == clientInfo.fyLoc) && (clientInfo.fxLoc == clientInfo.xLoc)) // handles fruit pickup
         {
@@ -76,8 +76,8 @@ void cGObjDrv_c::cGObj_IO_Down()
             clientInfo.weapons++;
 
             // spwan the fruit randomly again. 
-            clientInfo.fxLoc = rand() % EFF_GAME_SIZE;
-            clientInfo.fyLoc = rand() % EFF_GAME_SIZE;
+            clientInfo.fxLoc = rand() % SIO_EFF_GAME_SIZE;
+            clientInfo.fyLoc = rand() % SIO_EFF_GAME_SIZE;
         }
 
 
@@ -100,7 +100,7 @@ void cGObjDrv_c::cGObj_IO_Right()
 
     if ((tempXLoc != clientInfo.pxLoc) || (clientInfo.yLoc != clientInfo.pyLoc)) // handle player player conflict. 
     {
-        tempXLoc = tempXLoc % EFF_GAME_SIZE;
+        tempXLoc = tempXLoc % SIO_EFF_GAME_SIZE;
 
         if((tempXLoc == clientInfo.fxLoc) && (clientInfo.fyLoc == clientInfo.yLoc)) // handles fruit pickup
         {
@@ -108,8 +108,8 @@ void cGObjDrv_c::cGObj_IO_Right()
             clientInfo.weapons++;
 
             // spwan the fruit randomly again. 
-            clientInfo.fxLoc = rand() % EFF_GAME_SIZE;
-            clientInfo.fyLoc = rand() % EFF_GAME_SIZE;
+            clientInfo.fxLoc = rand() % SIO_EFF_GAME_SIZE;
+            clientInfo.fyLoc = rand() % SIO_EFF_GAME_SIZE;
         }
 
         clientInfo.xLoc = tempXLoc;
@@ -130,9 +130,9 @@ void cGObjDrv_c::cGObj_IO_Left()
     {
         if (tempXLoc < 0)
         {
-            tempXLoc = GAME_SIZE-1;
+            tempXLoc = SIO_GAME_SIZE-1;
         }
-        else if(tempXLoc > GAME_SIZE)
+        else if(tempXLoc > SIO_GAME_SIZE)
         {
             tempXLoc = 1; 
         }
@@ -143,8 +143,8 @@ void cGObjDrv_c::cGObj_IO_Left()
             clientInfo.weapons++;
 
             // spwan the fruit randomly again. 
-            clientInfo.fxLoc = rand() % EFF_GAME_SIZE;
-            clientInfo.fyLoc = rand() % EFF_GAME_SIZE;
+            clientInfo.fxLoc = rand() % SIO_EFF_GAME_SIZE;
+            clientInfo.fyLoc = rand() % SIO_EFF_GAME_SIZE;
         }
 
 
