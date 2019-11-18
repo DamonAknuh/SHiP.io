@@ -62,7 +62,7 @@ private:
     uint32_t lastFailed; 
 };
 
-typedef handler_c<sSockDrv_c> sSockDriver_Handle;
+typedef handler_c<sSockDrv_c> sSockDrv_Handle;
 
 
 #endif // __SOCKET_DRV_H

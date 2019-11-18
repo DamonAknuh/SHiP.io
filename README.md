@@ -13,7 +13,6 @@ Deliver a simple and creative computer game which showcases some form of end use
  -  Implement a server application which can manage and respond to requests, messages, and data from multiple clients.
  -  Implement a client application which can interact with other end-users through usage of mouse or keyboard.
 
-
 ### Constraints
 
 ### Requirement Engineering
@@ -47,7 +46,8 @@ for client
   - [ ] - Update_GameState function
   - [ ] - Send data packet function
   - [ ] - figure out pimpInput and other player shooting. need new packet ele
-  - [ ] - Filler_Filler_Filler
+  - [ ] - No need to redraw if no client inputs and no packets recieved. 
+  - [ ] - Replace console with openGL or 2D game library. 
 
 
 ## Maintenance

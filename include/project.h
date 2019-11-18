@@ -19,14 +19,13 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE           
     SOFTWARE.                                                                               
 **************************************************************************************************/
-\
+
 #ifndef __PROJECT_H
  #define __PROJECT_H
 
 #include <winsock2.h>
 #include <stdio.h>
 #include <assert.h>
-
 
 /*************************************************************************************************/
 /*                            GLOBAL DEFINTIONS                                                  */
@@ -42,8 +41,6 @@
 #define SIO_PACKET_SIZE         (256)
 #define SIO_GAME_SIZE           (30)
 #define SIO_EFF_GAME_SIZE       (SIO_GAME_SIZE - 2)
-
-
 
 /*************************************************************************************************/
 /*                            ENUMs TYPEDEFS & STRUCTURES                                        */
@@ -126,9 +123,5 @@ private:
 };
 
 template <class T> T* handler_c<T>::mHandle=NULL;
-
-
-
-
 
 #endif // __PROJECT_H

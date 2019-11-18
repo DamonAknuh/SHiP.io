@@ -51,7 +51,7 @@ bool sLogicDrv_c::sLogic_InitSInfo()
 
 void Update_GameState()
 {
-    sSockDrv_c * sSockDriver    = sSockDriver_Handle::Handler_GetInstance();
+    sSockDrv_c * sSockDriver    = sSockDrv_Handle::Handler_GetInstance();
     clientPacket_t * packetInfo = NULL;
     clientID_e iD;
     packetTypes_e type; 

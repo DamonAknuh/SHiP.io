@@ -41,7 +41,7 @@ clientInfo_t clientInfo;
 bool Game_Over()
 {
 
-    cSockDrv_c * cSockDriver    = cSockDriver_Handle::Handler_GetInstance();
+    cSockDrv_c * cSockDriver    = cSockDrv_Handle::Handler_GetInstance();
     cSockDriver->cSock_SendPacket(CLIENT_EXIT);
 
     std::cout << std::endl;
@@ -57,7 +57,7 @@ bool SetupGame()
 {
     // Driver instantiation and registeration.
     // Socket Driver
-    cSockDrv_c * cSockDriver    = cSockDriver_Handle::Handler_GetInstance();
+    cSockDrv_c * cSockDrv    = cSockDrv_Handle::Handler_GetInstance();
     // Game object Driver
     cGObjDrv_c * cGObjDrv       = cGObjDrv_Handle::Handler_GetInstance();
     // Output driver
@@ -67,7 +67,7 @@ bool SetupGame()
     dConsoleDrv->Setup_Avatars();
     
     // register cleitn program with the server application. 
-    if( cSockDriver->cSock_RegisterClient() == false)
+    if( cSockDrv->cSock_RegisterClient() == false)
     {
         return false; 
     }
@@ -92,9 +92,9 @@ void Draw_Game()
 
 void Send_Data()
 {
-    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
+    cSockDrv_c * cSockDrv = cSockDrv_Handle::Handler_GetInstance();
 
-    cSockDriver->cSock_SendPacket(CLIENT_DATA);
+    cSockDrv->cSock_SendPacket(CLIENT_DATA);
 }
 
 void Get_Input()

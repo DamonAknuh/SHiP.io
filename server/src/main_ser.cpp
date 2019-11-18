@@ -36,7 +36,7 @@ ServerInfo_t serverInfo;
 
 bool Setup_Game()
 {
-    sSockDrv_c * sSockDriver    = sSockDriver_Handle::Handler_GetInstance();
+    sSockDrv_c * sSockDriver    = sSockDrv_Handle::Handler_GetInstance();
 
     if( sSockDriver->sSock_RegisterClient() == false)
     {
@@ -73,7 +73,7 @@ int main(int argc, char const *argv[])
         {
             break;
         }
-        
+
         Update_GameState();
     }
 
