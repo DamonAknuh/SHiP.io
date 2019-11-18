@@ -62,8 +62,15 @@ cSockDrv_c::cSockDrv_c() :
 
 bool cSockDrv_c::cSock_RegisterClient()
 {
-    bool status = false; 
+    clientPacket_t * const iPacketInfo = (clientPacket_t*) iPacketBuff;
     std::string serverAddress; 
+    SOCKADDR_IN from;
+    bool status = false; 
+    bool repeat = false; 
+    int32_t revStatus; 
+    int32_t flags = 0;
+    int32_t addressSize  = sizeof(serverAddress); // todo change these to class wide. 
+
     std::cout << "|\n__________________________________________________________________________________" << std::endl;
     std::cout << "| Enter the IP address of the server: \n";
 
@@ -79,6 +86,7 @@ bool cSockDrv_c::cSock_RegisterClient()
 
         std::cout << "| Entered: "<< serverAddress << std::endl;
     }
+
     char tempCArray[serverAddress.size() + 1];
     strcpy(tempCArray, serverAddress.c_str());
 
@@ -86,11 +94,43 @@ bool cSockDrv_c::cSock_RegisterClient()
     server_address.sin_port = htons( SIO_PORT_BINDING );
     server_address.sin_addr.S_un.S_addr = inet_addr(tempCArray);  // find by command promt ipconfig
 
+    std::cout << "|\n|_________________________________________________________________________________" << std::endl;
+    std::cout << "| Sending Join request to server... ";
+
+    // SEND JOIN REQUEST
     if (!cSock_SendPacket(CLIENT_REG))
     {
         return false; 
     }
 
+    // RECIEVE CLIENT ID
+    do
+    {
+        revStatus = recvfrom(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&from, &addressSize );
+        if( revStatus == SOCKET_ERROR )
+        {
+            printf( "recvfrom returned SOCKET_ERROR, WSAGetLastError() %d", WSAGetLastError() );
+            repeat = true; 
+        }
+        else
+        {
+            iPacketBuff[revStatus] = 0;
+
+            if (iPacketInfo->contents[0].data.type == CLIENT_REG)
+            { // todo add checks for corret addy family and ports.
+                clientInfo.clientID = iPacketInfo->contents[0].data.clientID;
+                std::cout<< "Success!\n";
+                std::cout << "| You are player number: " << (uint32_t)clientInfo.clientID;
+            }
+            else 
+            {
+                std::cout<< "   Failed!!\n";
+                repeat = true; 
+            }
+            //printf( "%d.%d.%d.%d:%d - %s", clientAddress[i].sin_addr.S_un.S_un_b.s_b1, clientAddress[i].sin_addr.S_un.S_un_b.s_b2, clientAddress[i].sin_addr.S_un.S_un_b.s_b3, clientAddress[i].sin_addr.S_un.S_un_b.s_b4, clientAddress[i].sin_port, OPacketBuff );
+        }
+    } while (repeat);
+    
     return true; 
 }
 
@@ -98,7 +138,7 @@ bool cSockDrv_c::cSock_SendData()
 {
     bool flags = 0;
     if(SOCKET_ERROR == 
-        sendto(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&server_address, sizeof( server_address )))
+        sendto(sock, OPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&server_address, sizeof( server_address )))
     {
         printf( "\n !ERROR: Sendto failed: %d\n", WSAGetLastError());
         return false;
@@ -110,7 +150,7 @@ bool cSockDrv_c::cSock_SendData()
 
 bool cSockDrv_c::cSock_SendPacket(packetTypes_e mode)
 {
-    clientPacket_t * const packetInfo = (clientPacket_t*) iPacketBuff;
+    clientPacket_t * const packetInfo = (clientPacket_t*) OPacketBuff;
 
     packetInfo->contents[0].bits = 0;
 

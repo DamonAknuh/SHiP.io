@@ -52,7 +52,7 @@ private:
     SOCKET sock; 
     SOCKADDR_IN server_address;
     WSADATA winsock_data;
-
+    char OPacketBuff[SIO_PACKET_SIZE];
     char iPacketBuff[SIO_PACKET_SIZE];
     uint32_t lastFailed; 
 };

@@ -78,12 +78,14 @@ bool sSockDrv_c::sSock_RegisterClient()
 {
     int revStatus; 
     int flags = 0;
+    SOCKADDR_IN from;
     int32_t addressSize  = sizeof(clientAddress[0]);
+    clientPacket_t * const packetInfo = (clientPacket_t*) iPacketBuff;
 
-    for(uint32_t i = 0; i < SIO_MAX_PLAYERS; i++)
+    for(uint32_t i = 0; i < SIO_MAX_PLAYERS;)
     {
-        std::cout<< "| Registering Client: " << i << "...\n";
-        revStatus = recvfrom(sock, OPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&clientAddress[i], &addressSize );
+        std::cout<< "| Attempting to Register Client: " << i << "...";
+        revStatus = recvfrom(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&from, &addressSize );
         
         if( revStatus == SOCKET_ERROR )
         {
@@ -92,18 +94,37 @@ bool sSockDrv_c::sSock_RegisterClient()
         else
         {
             OPacketBuff[revStatus] = 0;
-            printf( "%d.%d.%d.%d:%d - %s", clientAddress[i].sin_addr.S_un.S_un_b.s_b1, clientAddress[i].sin_addr.S_un.S_un_b.s_b2, clientAddress[i].sin_addr.S_un.S_un_b.s_b3, clientAddress[i].sin_addr.S_un.S_un_b.s_b4, clientAddress[i].sin_port, OPacketBuff );
+
+            if (packetInfo->contents[0].data.type == CLIENT_REG)
+            { // todo add checks for corret addy family and ports. 
+                clientAddress[i].sin_family = SIO_ADDRESS_FAMILY;
+                clientAddress[i].sin_port   = from.sin_port;
+                clientAddress[i].sin_addr   = from.sin_addr;
+                std::cout << "  Successfull!";
+                std::cout << "\n|    Client ID: " << i;
+                printf( "\n|    Address:   %d.%d.%d.%d", clientAddress[i].sin_addr.S_un.S_un_b.s_b1, clientAddress[i].sin_addr.S_un.S_un_b.s_b2, clientAddress[i].sin_addr.S_un.S_un_b.s_b3, clientAddress[i].sin_addr.S_un.S_un_b.s_b4);
+                std::cout << "\n|    Port:      " << clientAddress[i].sin_port << std::endl;
+                sSock_SendPacket(CLIENT_REG, (clientID_e) (i));
+                i++;
+            }
+            else 
+            {
+                std::cout<< "   Failed!!\n";
+            }
+            //printf( "%d.%d.%d.%d:%d - %s", clientAddress[i].sin_addr.S_un.S_un_b.s_b1, clientAddress[i].sin_addr.S_un.S_un_b.s_b2, clientAddress[i].sin_addr.S_un.S_un_b.s_b3, clientAddress[i].sin_addr.S_un.S_un_b.s_b4, clientAddress[i].sin_port, OPacketBuff );
         }
-        std::cout<< "\n|\n| Successfully Registered Client: " << i << "...\n";
+       
     }
+    std::cout << "|_____________________________________________________" << std::endl;
+    
     return true;
 }
 
-bool sSockDrv_c::sSock_SendData()
+bool sSockDrv_c::sSock_SendData(clientID_e iD)
 {
     bool flags = 0;
     if(SOCKET_ERROR == 
-        sendto(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&clientAddress, sizeof( clientAddress )))
+        sendto(sock, OPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&clientAddress[iD], sizeof( clientAddress[iD] )))
     {
         lastFailed = WSAGetLastError();
         printf( "\n !ERROR: Sendto failed: %d\n", lastFailed);
@@ -114,40 +135,43 @@ bool sSockDrv_c::sSock_SendData()
 }
 
 
-bool sSockDrv_c::sSock_SendPacket(packetTypes_e mode)
+bool sSockDrv_c::sSock_SendPacket(packetTypes_e mode, clientID_e iD)
 {
-    // clientPacket_t * const packetInfo = (clientPacket_t*) iPacketBuff;
+    clientPacket_t * const packetInfo = (clientPacket_t*) OPacketBuff;
 
-    // packetInfo->contents[0].bits = 0;
+    packetInfo->contents[0].bits = 0;
 
-    // switch (mode)
-    // {
-    //     case CLIENT_DATA:
-    //         packetInfo->contents[0].data.type = CLIENT_DATA;
+    switch (mode)
+    {
+        case CLIENT_DATA:
+            packetInfo->contents[0].data.type = CLIENT_DATA;
+            packetInfo->contents[0].data.clientID = iD;
 
-    //         break;
-    //     case CLIENT_ACK:
-    //         packetInfo->contents[0].data.type = CLIENT_ACK;
+            break;
+        case CLIENT_ACK:
+            packetInfo->contents[0].data.type = CLIENT_ACK;
+            packetInfo->contents[0].data.clientID = iD;
+            break;
 
-    //         break;
+        case CLIENT_EXIT:
+            packetInfo->contents[0].data.type = CLIENT_EXIT;
+            packetInfo->contents[0].data.clientID = iD;
 
-    //     case CLIENT_EXIT:
-    //         packetInfo->contents[0].data.type = CLIENT_EXIT;
-
-    //         break;
+            break;
         
-    //     case CLIENT_REG:
-    //         packetInfo->contents[0].data.type = CLIENT_REG;
+        case CLIENT_REG:
+            packetInfo->contents[0].data.type = CLIENT_REG;
+            packetInfo->contents[0].data.clientID = iD;
 
-    //         if (!sSock_SendData())
-    //         { 
-    //             return false; 
-    //         }
-    //         break;
+            if (!sSock_SendData(iD))
+            { 
+                return false; 
+            }
+            break;
         
-    //     default: // unknown mode detected
-    //         return false; 
-    // }
+        default: // unknown mode detected
+            return false; 
+    }
 
     return true;
 }

@@ -43,12 +43,10 @@ bool cGObjDrv_c::cGObj_InitCInfo()
 
     // temporary untill can handle it in sock initialization.
     // todo make logic layer a class driver object. 
-    clientInfo.xLoc = 5;
-    clientInfo.yLoc = 5;
+    clientInfo.xLoc = (clientInfo.clientID*25) + 3;
+    clientInfo.yLoc = (clientInfo.clientID*25) + 3;
     clientInfo.impInput = IO_NULL; // reset shot to zero
     
-
-
     clientInfo.pxLoc = 25;
     clientInfo.pyLoc = 15;
 

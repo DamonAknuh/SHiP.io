@@ -19,7 +19,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE           
     SOFTWARE.                                                                               
 **************************************************************************************************/
-
+\
 #ifndef __PROJECT_H
  #define __PROJECT_H
 
@@ -56,6 +56,42 @@ typedef enum
     CLIENT_EXIT = 2,
     CLIENT_ACK  = 3, 
 } packetTypes_e;
+
+typedef enum
+{
+    CLIENT_1 = 1,
+    CLIENT_2 = 2,
+} clientID_e;
+
+
+
+typedef struct
+{
+    union
+    {
+        struct 
+        {
+                uint32_t type        : 4; // 0 for registration 1 for input data.
+                uint32_t clientID    : 1; // client ID for the two client programs.
+                uint32_t state       : 1; // 0 for dead 1 for alive 
+                uint32_t resv        : 10; // reserved
+                uint32_t x_loc       : 8;
+                uint32_t y_loc       : 8;
+        } data; 
+        uint32_t bits; 
+    };
+}cData_t; 
+
+
+typedef struct 
+{
+    
+    union
+    {
+        cData_t contents[SIO_MAX_PLAYERS];
+        uint8_t PACKET_BYTES[SIO_PACKET_SIZE];
+    };
+} clientPacket_t;
 
 /*************************************************************************************************/
 /*                            CLASS  DEFINTIONS                                                  */

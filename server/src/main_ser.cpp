@@ -59,7 +59,7 @@ int main(int argc, char const *argv[])
     std::cout << "|------------------------------|" << std::endl;
     std::cout << "|---------TO SHiP.IO-----------|" << std::endl;
     std::cout << "|-----------SERVER-------------|" << std::endl;
-    std::cout << "|______________________________|" << std::endl;
+    std::cout << "|______________________________|_____________________" << std::endl;
 
     if (!Setup_Game())
     {
@@ -69,7 +69,6 @@ int main(int argc, char const *argv[])
 
     while(!serverInfo.GAME_OVER)
     {
-
         if (_kbhit() && _getch() == 't')
         {
             break;

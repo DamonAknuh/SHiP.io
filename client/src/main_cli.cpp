@@ -90,6 +90,13 @@ void Draw_Game()
     dConsoleDrv->Draw_Game();
 }
 
+void Send_Data()
+{
+    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
+
+    cSockDriver->cSock_SendPacket(CLIENT_DATA);
+}
+
 void Get_Input()
 {
     clientInfo.input = IO_NULL; // no IO detected
@@ -123,11 +130,6 @@ void Get_Input()
     }
 }
 
-void Send_Data()
-{
-
-}
-
 int main(int argc, char const *argv[])
 {
     std::cout << std::endl;
@@ -143,7 +145,14 @@ int main(int argc, char const *argv[])
         printf("ERROR: Setup Game Failed");
         exit(0);
     }
-    
+
+    system("cls");
+    std::cout << "________________________________" << std::endl;
+    std::cout << "|-------~STARTING GAME~--------|" << std::endl;
+    std::cout << "|______________________________|" << std::endl;
+
+    Sleep(1000);
+
     // main game loop
     while(!clientInfo.GAME_OVER)
     {

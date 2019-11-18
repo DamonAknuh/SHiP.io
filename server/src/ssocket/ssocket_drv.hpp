@@ -42,11 +42,11 @@ public:
     sSockDrv_c();
     ~sSockDrv_c();
     bool sSock_RegisterClient();
-    bool sSock_SendPacket(packetTypes_e mode);
+    bool sSock_SendPacket(packetTypes_e mode,  clientID_e iD);
     void sSock_RecieveData(uint64_t &input);
 
 private:
-    bool sSock_SendData();
+    bool sSock_SendData(clientID_e iD);
 
 private:
     SOCKET sock; 
