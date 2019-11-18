@@ -160,8 +160,6 @@ int main(int argc, char const *argv[])
         Get_Input();
         Calculate_GameState();
         Send_Data();
-
-        // Sleep(5);
     }
     Draw_Game();
 
@@ -169,4 +167,3 @@ int main(int argc, char const *argv[])
 
     return 0;
 }
-

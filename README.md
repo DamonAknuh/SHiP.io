@@ -46,7 +46,7 @@ for client
   - [ ] - figure out client talking to each other
   - [ ] - Update_GameState function
   - [ ] - Send data packet function
-  - [ ] - Filler_Filler_Filler
+  - [ ] - figure out pimpInput and other player shooting. need new packet ele
   - [ ] - Filler_Filler_Filler
 
 

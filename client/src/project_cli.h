@@ -74,6 +74,7 @@ typedef struct
 
     uint8_t  pxLoc;
     uint8_t  pyLoc;
+    uint8_t  pimpInput;
 
     uint8_t  fxLoc;
     uint8_t  fyLoc;
