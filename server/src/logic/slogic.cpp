@@ -20,62 +20,29 @@
     SOFTWARE.                                                                               
 **************************************************************************************************/
 
-// library includes
-#include <iostream>
-#include <stdint.h>
-#include <winsock2.h>
-#include <conio.h> // for kbhit and getch.
-
-// program includes
 #include "project_ser.h"
 #include "slogic.h"
-#include "ssocket_drv.hpp"
 
-
-ServerInfo_t serverInfo;
-
-bool Setup_Game()
+sLogicDrv_c::~sLogicDrv_c()
 {
-    sSockDrv_c * sSockDriver    = sSockDriver_Handle::Handler_GetInstance();
 
-    if( sSockDriver->sSock_RegisterClient() == false)
-    {
-        return false; 
-    }
-    sLogicDrv_c * sLogicDrv    = sLogicDrv_Handle::Handler_GetInstance();
-
-    if ( sLogicDrv->sLogic_InitSInfo() == false)
-    {
-        return false; 
-    }
-    return true;
 }
 
-int main(int argc, char const *argv[])
+sLogicDrv_c::sLogicDrv_c()
 {
-    std::cout << std::endl;
-    std::cout << "________________________________" << std::endl;
-    std::cout << "|---------~!WELCOME!~----------|" << std::endl;
-    std::cout << "|------------------------------|" << std::endl;
-    std::cout << "|---------TO SHiP.IO-----------|" << std::endl;
-    std::cout << "|-----------SERVER-------------|" << std::endl;
-    std::cout << "|______________________________|" << std::endl;
 
-    if (!Setup_Game())
-    {
-        std::cout << "| Failed to setup game" << std::endl;
-        exit(0);
-    }
-
-    while(!serverInfo.GAME_OVER)
-    {
-
-        if (_kbhit() && _getch() == 't')
-        {
-            break;
-        }
-    }
-
-    exit(0);
 }
 
+bool sLogicDrv_c::sLogic_InitSInfo()
+{
+    serverInfo.GAME_OVER = false; 
+    serverInfo.ticks = 0;
+
+    for(uint32_t i = 0; i < SIO_MAX_PLAYERS ; i++)
+    {
+        serverInfo.clientInfo[i].xLoc  = (i*25) + 3;
+        serverInfo.clientInfo[i].yLoc  = (i*25) + 3;
+        serverInfo.clientInfo[i].state = 1; 
+    }
+    return true; 
+}

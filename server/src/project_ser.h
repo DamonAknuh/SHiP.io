@@ -23,6 +23,9 @@
 
 #ifndef __PROJECT_SER_H
 #define __PROJECT_SER_H
+
+#include <stdint.h>
+
 #include "../../include/project.h"
 
 
@@ -34,25 +37,18 @@
 /*                            ENUMs TYPEDEFS & STRUCTURES                                        */
 /*************************************************************************************************/
 
+typedef struct 
+{
+    uint8_t  xLoc;
+    uint8_t  yLoc;
+    uint8_t  state;
+}clientInfo_t;
+
 typedef struct
 {
     uint8_t  GAME_OVER;
-    uint8_t  clientID;
-    
-
-    uint8_t  xLoc;
-    uint8_t  yLoc;
-    uint8_t  weapons; 
-    uint16_t input;
-    uint16_t impInput;
-    uint8_t  shotCounter;
-
-    uint8_t  pxLoc;
-    uint8_t  pyLoc;
-
-    uint8_t  fxLoc;
-    uint8_t  fyLoc;
-    // more to come. 
+    clientInfo_t clientInfo[SIO_MAX_PLAYERS];
+    uint64_t ticks;
 }ServerInfo_t;
 
 extern ServerInfo_t serverInfo;

@@ -50,7 +50,8 @@ private:
 
 private:
     SOCKET sock; 
-    SOCKADDR_IN local_address;
+    SOCKADDR_IN localAddress;
+    SOCKADDR_IN clientAddress[2];
     WSADATA winsock_data;
 
     char iPacketBuff[SIO_PACKET_SIZE];

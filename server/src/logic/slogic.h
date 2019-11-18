@@ -20,62 +20,29 @@
     SOFTWARE.                                                                               
 **************************************************************************************************/
 
-// library includes
-#include <iostream>
-#include <stdint.h>
-#include <winsock2.h>
-#include <conio.h> // for kbhit and getch.
 
-// program includes
-#include "project_ser.h"
-#include "slogic.h"
-#include "ssocket_drv.hpp"
+#ifndef __SLOGIC_H
+#define __SLOGIC_H
 
 
-ServerInfo_t serverInfo;
 
-bool Setup_Game()
+/**
+ * PLACE HOLDER FOR CLASS INFORMATION
+ * 
+ * @TODO: aknuh add class infromation
+ */
+class sLogicDrv_c
 {
-    sSockDrv_c * sSockDriver    = sSockDriver_Handle::Handler_GetInstance();
+private:
+    /* Data */
+    
+public:
+    // Initialization
+    sLogicDrv_c();
+    bool sLogic_InitSInfo();
+    ~sLogicDrv_c();
+};
 
-    if( sSockDriver->sSock_RegisterClient() == false)
-    {
-        return false; 
-    }
-    sLogicDrv_c * sLogicDrv    = sLogicDrv_Handle::Handler_GetInstance();
+typedef handler_c<sLogicDrv_c> sLogicDrv_Handle;
 
-    if ( sLogicDrv->sLogic_InitSInfo() == false)
-    {
-        return false; 
-    }
-    return true;
-}
-
-int main(int argc, char const *argv[])
-{
-    std::cout << std::endl;
-    std::cout << "________________________________" << std::endl;
-    std::cout << "|---------~!WELCOME!~----------|" << std::endl;
-    std::cout << "|------------------------------|" << std::endl;
-    std::cout << "|---------TO SHiP.IO-----------|" << std::endl;
-    std::cout << "|-----------SERVER-------------|" << std::endl;
-    std::cout << "|______________________________|" << std::endl;
-
-    if (!Setup_Game())
-    {
-        std::cout << "| Failed to setup game" << std::endl;
-        exit(0);
-    }
-
-    while(!serverInfo.GAME_OVER)
-    {
-
-        if (_kbhit() && _getch() == 't')
-        {
-            break;
-        }
-    }
-
-    exit(0);
-}
-
+#endif // __SLOGIC_H
