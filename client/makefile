@@ -22,7 +22,7 @@
 #                                                                                        #
 ##########################################################################################
 
-TARGET_EXEC ?= SHIP_CLI
+TARGET_EXEC ?= ../SHIP_CLI
 TEST_TARGET_EXEC ?= SHIP.ht
 
 # Set Compilers to use
