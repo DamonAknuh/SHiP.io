@@ -1,4 +1,4 @@
-/********************************************************************************************                                                                                       
+/********************************************************************************************
     Copyright (c) 2019 Damon Hunka                                                          
                                                                                            
     Permission is hereby granted, free of charge, to any person obtaining a copy            
@@ -20,46 +20,44 @@
     SOFTWARE.                                                                               
 **************************************************************************************************/
 
-// library includes
-#include <iostream>
+#ifndef __SOCKET_DRV_H
+#define __SOCKET_DRV_H
+
+// Library Includes
 #include <stdint.h>
 #include <winsock2.h>
-#include <conio.h> // for kbhit and getch.
 
-// program includes
-#include "project_ser.h"
-#include "ssocket_drv.hpp"
+// Program Includes. 
+#include "project_cli.h"
 
-
-ServerInfo_t serverInfo;
-
-bool Setup_Game()
+/**
+ * PLACE HOLDER FOR CLASS INFORMATION
+ * 
+ * @TODO: aknuh add class infromation
+ */
+class cSockDrv_c
 {
-    sSockDrv_c * sSockDriver    = sSockDriver_Handle::Handler_GetInstance();
+public:
+    
+    cSockDrv_c();
+    ~cSockDrv_c();
+    bool cSock_RegisterClient();
+    bool cSock_SendPacket(packetTypes_e mode);
+    void cSock_RecieveData(uint64_t &input);
 
-    if( sSockDriver->sSock_RegisterClient() == false)
-    {
-        return false; 
-    }
-}
+private:
+    bool cSock_SendData();
 
-int main(int argc, char const *argv[])
-{
-    if (!Setup_Game())
-    {
-        std::cout << "| Failed to setup game" << std::endl;
-        exit(0);
-    }
+private:
+    SOCKET sock; 
+    SOCKADDR_IN server_address;
+    WSADATA winsock_data;
 
-    while(serverInfo.GAME_OVER)
-    {
+    char iPacketBuff[SIO_PACKET_SIZE];
+    uint32_t lastFailed; 
+};
 
-        if (_kbhit() && _getch() == 't')
-        {
-            break;
-        }
-    }
+typedef handler_c<cSockDrv_c> cSockDriver_Handle;
 
-    exit(0);
-}
 
+#endif // __SOCKET_DRV_H

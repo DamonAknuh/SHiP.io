@@ -28,34 +28,37 @@
 #include <winsock2.h>
 
 // Program Includes. 
-#include "project_cli.h"
+#include "project_ser.h"
 
 /**
  * PLACE HOLDER FOR CLASS INFORMATION
  * 
  * @TODO: aknuh add class infromation
  */
-class cSockDrv_c
+class sSockDrv_c
 {
 public:
     
-    cSockDrv_c();
-    ~cSockDrv_c();
-    bool cSock_RegisterClient();
-    bool cSock_SendPacket(clientPacketTypes_e mode);
-    void cSock_RecieveData(uint64_t &input);
+    sSockDrv_c();
+    ~sSockDrv_c();
+    bool sSock_RegisterClient();
+    bool sSock_SendPacket(packetTypes_e mode);
+    void sSock_RecieveData(uint64_t &input);
 
 private:
-    bool cSock_SendData();
+    bool sSock_SendData();
 
 private:
     SOCKET sock; 
-    SOCKADDR_IN server_address;
-    char packetBuf[SIO_PACKET_SIZE];
+    SOCKADDR_IN local_address;
+    WSADATA winsock_data;
+
+    char iPacketBuff[SIO_PACKET_SIZE];
+    char OPacketBuff[SIO_PACKET_SIZE];
     uint32_t lastFailed; 
 };
 
-typedef handler_c<cSockDrv_c> cSockDriver_Handle;
+typedef handler_c<sSockDrv_c> sSockDriver_Handle;
 
 
 #endif // __SOCKET_DRV_H

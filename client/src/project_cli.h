@@ -48,7 +48,7 @@
 #define EFF_GAME_SIZE       (GAME_SIZE - 2)
 
 /*************************************************************************************************/
-/*                            TYPEDEFS & STRUCTURES                                              */
+/*                           ENUMs TYPEDEFS & STRUCTURES                                         */
 /*************************************************************************************************/
 
 typedef enum
@@ -61,15 +61,6 @@ typedef enum
     IO_EXIT,
     IO_NULL,
 }inputs_e;
-
-typedef enum
-{
-    CLIENT_DATA = 0,
-    CLIENT_REG  = 1,
-    CLIENT_EXIT = 2,
-    CLIENT_ACK  = 3, 
-} clientPacketTypes_e;
-
 
 typedef struct
 {

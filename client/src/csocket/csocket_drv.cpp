@@ -27,7 +27,7 @@
 #include <ws2tcpip.h>
 
 
-#include "socket_drv.hpp"
+#include "csocket_drv.hpp"
 #include "project_cli.h"
 
 /**
@@ -42,7 +42,6 @@ cSockDrv_c::cSockDrv_c() :
 {
     // Initialize the winsock. 
     WORD winsock_version = SIO_WINSOCK_VER;
-    WSADATA winsock_data;
 
     if( WSAStartup( winsock_version, &winsock_data ) )
     {
@@ -65,6 +64,7 @@ bool cSockDrv_c::cSock_RegisterClient()
 {
     bool status = false; 
     std::string serverAddress; 
+    std::cout << "|\n__________________________________________________________________________________" << std::endl;
     std::cout << "| Enter the IP address of the server: \n";
 
     // SET PLAYER ONE CHARACTER
@@ -95,9 +95,9 @@ bool cSockDrv_c::cSock_SendData()
 {
     bool flags = 0;
     if(SOCKET_ERROR == 
-        sendto(sock, packetBuf, SIO_PACKET_SIZE, flags, (SOCKADDR*)&server_address, sizeof( server_address )))
+        sendto(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&server_address, sizeof( server_address )))
     {
-        printf( "Sendto failed: %d", WSAGetLastError());
+        printf( "\n !ERROR: Sendto failed: %d\n", WSAGetLastError());
         return false;
     }
 
@@ -105,9 +105,9 @@ bool cSockDrv_c::cSock_SendData()
 }
 
 
-bool cSockDrv_c::cSock_SendPacket(clientPacketTypes_e mode)
+bool cSockDrv_c::cSock_SendPacket(packetTypes_e mode)
 {
-    clientPacket_t * const packetInfo = (clientPacket_t*) packetBuf;
+    clientPacket_t * const packetInfo = (clientPacket_t*) iPacketBuff;
 
     packetInfo->contents[0].bits = 0;
 
