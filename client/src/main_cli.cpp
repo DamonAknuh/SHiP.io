@@ -130,7 +130,12 @@ void Send_Data()
 
 int main(int argc, char const *argv[])
 {
-    std::cout << "WELCOME TO THE SHiP.IO GAME!\n|\n";
+        std::cout << std::endl;
+    std::cout << "________________________________" << std::endl;
+    std::cout << "|---------~!WELCOME!~----------|" << std::endl;
+    std::cout << "|------------------------------|" << std::endl;
+    std::cout << "|---------TO SHiP.IO!----------|" << std::endl;
+    std::cout << "|______________________________|" << std::endl;
 
     // Game Initialization;
     if (!SetupGame())

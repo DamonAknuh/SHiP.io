@@ -187,17 +187,17 @@ void dConsoleDrv_c::Setup_Avatars()
 {
     bool status = false; 
     char chInput;
-
-    std::cout << "| Please Input a character for your ship\n";
+    std::cout << "__________________________________________________________________________________" << std::endl;
+    std::cout << "| Please Input a character for your ship \n";
 
     // SET PLAYER ONE CHARACTER
     while(!status)
     {
-        std::cout << "| --> Note: Input must be an non-control character and not one of: '-' , '|' , '_ ' , ' '\n";
+        std::cout << "| --> Note: Input must be an non-control character and not one of: [-|_]\n|";
         while(!_kbhit()){} // wait for input 
         chInput = _getch();
         status = Set_PlayerOneAvatar(chInput);
-        std::cout << "| Entered: "<< chInput << std::endl;
+        std::cout << "\n|\n| Entered: "<< chInput << std::endl;
     }
 
     // SET PLAYER TWO CHARACTER
@@ -206,11 +206,11 @@ void dConsoleDrv_c::Setup_Avatars()
 
     while(!status)
     {
-        std::cout << "| --> Note: Input must be an non-control character and not one of: [-|_s ]'\n";
+        std::cout << "| --> Note: Input must be an non-control character and not one of: [-|_]'\n|";
         while(!_kbhit()){} // wait for input 
         chInput = _getch();
         status = Set_PlayerTwoAvatar(chInput);
-        std::cout << "| Entered: "<< chInput << std::endl;
+        std::cout << "\n|\n| Entered: "<< chInput << std::endl;
     }
 }
 
