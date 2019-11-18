@@ -26,23 +26,26 @@ Deliver a simple and creative computer game which showcases some form of end use
 
 build the program with the following command  
 
-    user$ make SHiP.io
+for Server
+    /c/REPOS/SHiP.io/server$ make ../SHIP_SER
   
-    user$ .\SHiP.io.elf
+    C:\REPOS\SHiP.io> .\SHIP_SER.exe
+
+for client
+    /c/REPOS/SHiP.io/server$ make ../SHIP_SER
+  
+    C:\REPOS\SHiP.io> .\SHIP_CLI.exe
 
 
 ### Todo:
-- [ ] - Initialization 
-  - [ ] - Filler_Filler_Filler
-  - [ ] - Filler_Filler_Filler
-  - [ ] - Filler_Filler_Filler
-  - [ ] - Filler_Filler_Filler
-- [ ] - CLIENT
-  - [ ] - Filler_Filler_Filler
-  - [ ] - Filler_Filler_Filler
-- [ ] - SERVER 
-  - [ ] - Filler_Filler_Filler
-  - [ ] - Filler_Filler_Filler
+  - [X] - GAME OUTPUT
+  - [X] - CLIENT REGISTRATION
+  - [X] - SHOOTING FUNCTIONALITY
+  - [X] - PACKET STRUCTS
+  - [ ] - figure out ending trigger
+  - [ ] - figure out client talking to each other
+  - [ ] - Update_GameState function
+  - [ ] - Send data packet function
   - [ ] - Filler_Filler_Filler
   - [ ] - Filler_Filler_Filler
 
@@ -57,7 +60,6 @@ Client Server Guide:
 
 idk what this is
     - https://hero.handmade.network/episode/code/day001
-
 
 Game Engine Web-pages:
 
