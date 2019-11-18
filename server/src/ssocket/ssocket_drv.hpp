@@ -43,7 +43,10 @@ public:
     ~sSockDrv_c();
     bool sSock_RegisterClient();
     bool sSock_SendPacket(packetTypes_e mode,  clientID_e iD);
+    bool sSock_GetPacket(clientPacket_t * packetInfo);
+
     void sSock_RecieveData(uint64_t &input);
+
 
 private:
     bool sSock_SendData(clientID_e iD);

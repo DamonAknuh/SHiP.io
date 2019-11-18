@@ -24,6 +24,7 @@
 #ifndef __SLOGIC_H
 #define __SLOGIC_H
 
+void Update_GameState();
 
 
 /**

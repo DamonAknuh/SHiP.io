@@ -73,6 +73,8 @@ int main(int argc, char const *argv[])
         {
             break;
         }
+        
+        Update_GameState();
     }
 
     exit(0);

@@ -74,13 +74,31 @@ sSockDrv_c::sSockDrv_c() :
     }
 }
 
+bool sSockDrv_c::sSock_GetPacket(clientPacket_t * packetInfo)
+{
+    packetInfo = (clientPacket_t*)iPacketBuff;
+    SOCKADDR_IN from;
+    int32_t revStatus;     // todo consolidate
+    int32_t addressSize  = sizeof(clientAddress[0]);
+    int32_t flags = 0; 
+
+    revStatus = recvfrom(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&from, &addressSize );
+    if( revStatus == SOCKET_ERROR )
+    {
+        printf( "recvfrom returned SOCKET_ERROR, WSAGetLastError() %d", WSAGetLastError() );
+        return false; 
+    }
+
+    return true;
+}
+
 bool sSockDrv_c::sSock_RegisterClient()
 {
-    int revStatus; 
-    int flags = 0;
-    SOCKADDR_IN from;
-    int32_t addressSize  = sizeof(clientAddress[0]);
     clientPacket_t * const packetInfo = (clientPacket_t*) iPacketBuff;
+    SOCKADDR_IN from;
+    int32_t revStatus; 
+    int32_t flags = 0;
+    int32_t addressSize  = sizeof(clientAddress[0]);
 
     for(uint32_t i = 0; i < SIO_MAX_PLAYERS;)
     {
