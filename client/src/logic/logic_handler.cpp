@@ -42,15 +42,27 @@ bool cGObjDrv_c::cGObj_InitCInfo()
     clientInfo.shotCounter = 0;
 
     // temporary untill can handle it in sock initialization.
-    // todo make logic layer a class driver object. 
-    clientInfo.xLoc = (clientInfo.clientID*25) + 3;
-    clientInfo.yLoc = (clientInfo.clientID*25) + 3;
+    // todo make logic layer a class driver object.
+    if (clientInfo.clientID == 0)
+    {
+        clientInfo.xLoc = 4;
+        clientInfo.yLoc = 3;
+
+        clientInfo.pxLoc = SIO_GAME_SIZE - 4;
+        clientInfo.pyLoc = SIO_GAME_SIZE - 3;
+
+    }
+    else if (clientInfo.clientID == 1)
+    {
+        clientInfo.xLoc = SIO_GAME_SIZE - 4;
+        clientInfo.yLoc = SIO_GAME_SIZE - 3;
+
+        clientInfo.pxLoc = 4;
+        clientInfo.pyLoc = 3;
+
+    }
+
     clientInfo.impInput = IO_NULL; // reset shot to zero
-    
-    clientInfo.pxLoc = 25;
-    clientInfo.pyLoc = 15;
-
-
     clientInfo.input = IO_NULL;
 
     clientInfo.GAME_OVER = false; 
