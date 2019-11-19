@@ -42,6 +42,8 @@ typedef struct
     uint8_t  xLoc;
     uint8_t  yLoc;
     uint8_t  state;
+    uint8_t  shot;
+    uint8_t  sdir;
     uint8_t  avatar;
 }clientInfo_t;
 

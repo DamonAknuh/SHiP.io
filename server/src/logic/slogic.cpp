@@ -56,21 +56,33 @@ bool sLogicDrv_c::sLogic_InitSInfo()
 void Update_GameState()
 {
     sSockDrv_c * sSockDriver    = sSockDrv_Handle::Handler_GetInstance();
-    clientPacket_t * packetInfo = NULL;
+    clientPacket_t * packetInfo = (clientPacket_t*) sSockDriver->iPacketBuff;
     clientID_e iD;
     packetTypes_e type; 
 
-    if (!sSockDriver->sSock_GetPacket(packetInfo))
+    if (sSockDriver->sSock_GetPacket())
     {
         iD   = (clientID_e)    packetInfo->header.data.clientID;
         type = (packetTypes_e) packetInfo->header.data.type;
 
+        std::cout << "|__________________|PACKET|______________________" << std::endl;
+        std::cout << "| Client ID: " << iD << std::endl;
+        std::cout << "| Packet Type: " << type << std::endl; 
+        std::cout << "|" << std::endl;
+
         switch (type)
         {
             case CLIENT_DATA:
-                serverInfo.clientInfo[iD].xLoc = packetInfo->contents[0].data.x_loc;
-                serverInfo.clientInfo[iD].yLoc = packetInfo->contents[0].data.y_loc;
-                serverInfo.clientInfo[iD].state = packetInfo->contents[0].data.state;
+                serverInfo.clientInfo[iD].xLoc  = packetInfo->contents[iD].data.x_loc;
+                serverInfo.clientInfo[iD].yLoc  = packetInfo->contents[iD].data.y_loc;
+                serverInfo.clientInfo[iD].state = packetInfo->contents[iD].data.state;
+                serverInfo.clientInfo[iD].shot  = packetInfo->contents[iD].data.shot;
+                serverInfo.clientInfo[iD].sdir  = packetInfo->contents[iD].data.sdir;
+                std::cout << "| xLoc:   " << (uint32_t) serverInfo.clientInfo[iD].xLoc  << std::endl; 
+                std::cout << "| yLoc:   " << (uint32_t) serverInfo.clientInfo[iD].yLoc  << std::endl; 
+                std::cout << "| state:  " << (uint32_t) serverInfo.clientInfo[iD].state << std::endl; 
+                std::cout << "| shot:   " << (uint32_t) serverInfo.clientInfo[iD].shot  << std::endl; 
+
                 break;
 
             case CLIENT_EXIT:

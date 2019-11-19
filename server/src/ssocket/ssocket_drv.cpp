@@ -74,10 +74,8 @@ sSockDrv_c::sSockDrv_c() :
     }
 }
 
-bool sSockDrv_c::sSock_GetPacket(clientPacket_t * packetInfo)
+bool sSockDrv_c::sSock_GetPacket()
 {
-    UNUSED(packetInfo); // suppress unused.
-    packetInfo = (clientPacket_t*)iPacketBuff;
     SOCKADDR_IN from;
     int32_t revStatus;     // todo consolidate
     int32_t addressSize  = sizeof(clientAddress[0]);

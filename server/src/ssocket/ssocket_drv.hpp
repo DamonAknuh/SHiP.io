@@ -43,10 +43,12 @@ public:
     ~sSockDrv_c();
     bool sSock_RegisterClient();
     bool sSock_SendPacket(packetTypes_e mode,  clientID_e iD);
-    bool sSock_GetPacket(clientPacket_t * packetInfo);
+    bool sSock_GetPacket();
 
     void sSock_RecieveData(uint64_t &input);
 
+public: 
+    char iPacketBuff[SIO_PACKET_SIZE];
 
 private:
     bool sSock_SendData(clientID_e iD);
@@ -57,7 +59,7 @@ private:
     SOCKADDR_IN clientAddress[2];
     WSADATA winsock_data;
 
-    char iPacketBuff[SIO_PACKET_SIZE];
+
     char OPacketBuff[SIO_PACKET_SIZE];
     uint32_t lastFailed; 
 };

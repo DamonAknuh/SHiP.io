@@ -68,7 +68,7 @@ int main(int argc, char const *argv[])
     }
 
     std::cout << "________________________________" << std::endl;
-    std::cout << "|-------~FINISHED SETUP~-------|" << std::endl;e
+    std::cout << "|-------~FINISHED SETUP~-------|" << std::endl;
     std::cout << "|______________________________|" << std::endl;
 
     while(!serverInfo.GAME_OVER)
