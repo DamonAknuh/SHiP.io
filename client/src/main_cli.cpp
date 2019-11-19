@@ -85,9 +85,12 @@ bool SetupGame()
 // https://www.youtube.com/watch?v=E_-lMZDi7Uw
 void Draw_Game()
 {
-    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
+    if (clientInfo.input != IO_NULL || clientInfo.shotCounter) // no need to redraw if nothing to draw
+    {
+        dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
+        dConsoleDrv->Draw_Game();
+    }
 
-    dConsoleDrv->Draw_Game();
 }
 
 void Send_Data()
@@ -156,6 +159,7 @@ int main(int argc, char const *argv[])
     // main game loop
     while(!clientInfo.GAME_OVER)
     {
+
         Draw_Game();
         Get_Input();
         Calculate_GameState();

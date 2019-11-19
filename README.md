@@ -48,6 +48,8 @@ for client
   - [ ] - figure out pimpInput and other player shooting. need new packet ele
   - [ ] - No need to redraw if no client inputs and no packets recieved. 
   - [ ] - Replace console with openGL or 2D game library. 
+  - [ ] - INDEPENDENT GAME WIDTH AND HEIGHT
+
 
 
 ## Maintenance

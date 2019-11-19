@@ -51,9 +51,9 @@
 typedef enum
 {
     IO_LEFT = 0,
-    IO_RIGHT,
-    IO_UP,
-    IO_DOWN,
+    IO_RIGHT = 1,
+    IO_UP    = 2,
+    IO_DOWN, = 3, 
     IO_SHOOT,
     IO_EXIT,
     IO_NULL,
