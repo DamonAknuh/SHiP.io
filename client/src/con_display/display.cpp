@@ -199,24 +199,11 @@ void dConsoleDrv_c::Setup_Avatars()
         status = Set_PlayerOneAvatar(chInput);
         std::cout << "\n|\n| Entered: "<< chInput << std::endl;
     }
-
-    // SET PLAYER TWO CHARACTER
-    status = false; 
-    std::cout << "\n|\n| Please Input a character for your enemy ship\n";
-
-    while(!status)
-    {
-        std::cout << "| --> Note: Input must be an non-control character and not one of: [-|_]'\n|";
-        while(!_kbhit()){} // wait for input 
-        chInput = _getch();
-        status = Set_PlayerTwoAvatar(chInput);
-        std::cout << "\n|\n| Entered: "<< chInput << std::endl;
-    }
 }
 
 dConsoleDrv_c::dConsoleDrv_c() :
-    player1(DEFAULT_P1),
-    player2(DEFAULT_P2)
+    player2(DEFAULT_P2),
+    player1(DEFAULT_P1)
 {
 
 }

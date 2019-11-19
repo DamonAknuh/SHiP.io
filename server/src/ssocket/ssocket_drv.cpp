@@ -76,6 +76,7 @@ sSockDrv_c::sSockDrv_c() :
 
 bool sSockDrv_c::sSock_GetPacket(clientPacket_t * packetInfo)
 {
+    UNUSED(packetInfo); // suppress unused.
     packetInfo = (clientPacket_t*)iPacketBuff;
     SOCKADDR_IN from;
     int32_t revStatus;     // todo consolidate
@@ -113,17 +114,23 @@ bool sSockDrv_c::sSock_RegisterClient()
         {
             OPacketBuff[revStatus] = 0;
 
-            if (packetInfo->contents[0].data.type == CLIENT_REG)
+            if (packetInfo->header.data.type == CLIENT_REG)
             { // todo add checks for corret addy family and ports. 
                 clientAddress[i].sin_family = SIO_ADDRESS_FAMILY;
                 clientAddress[i].sin_port   = from.sin_port;
                 clientAddress[i].sin_addr   = from.sin_addr;
+
                 std::cout << "  Successfull!";
                 std::cout << "\n|    Client ID: " << i;
+                std::cout << "\n|    Avatar:    " << (char) packetInfo->header.data.response;
                 printf( "\n|    Address:   %d.%d.%d.%d", clientAddress[i].sin_addr.S_un.S_un_b.s_b1, clientAddress[i].sin_addr.S_un.S_un_b.s_b2, clientAddress[i].sin_addr.S_un.S_un_b.s_b3, clientAddress[i].sin_addr.S_un.S_un_b.s_b4);
                 std::cout << "\n|    Port:      " << clientAddress[i].sin_port << std::endl;
-                sSock_SendPacket(CLIENT_REG, (clientID_e) (i));
+
+                // avatar information is giving back in response data section
+                serverInfo.clientInfo[i].avatar = packetInfo->header.data.response;
+                
                 i++;
+                
             }
             else 
             {
@@ -133,6 +140,13 @@ bool sSockDrv_c::sSock_RegisterClient()
         }
        
     }
+
+    // Acknowledge registration with server and start game for clients. 
+    for (uint32_t i = 0; i < SIO_MAX_PLAYERS; i++)
+    {
+        sSock_SendPacket(CLIENT_REG, (clientID_e) (i));
+    }
+
     std::cout << "|_____________________________________________________" << std::endl;
     
     return true;
@@ -156,30 +170,32 @@ bool sSockDrv_c::sSock_SendData(clientID_e iD)
 bool sSockDrv_c::sSock_SendPacket(packetTypes_e mode, clientID_e iD)
 {
     clientPacket_t * const packetInfo = (clientPacket_t*) OPacketBuff;
-
+//  ensure zerod packet contents
     packetInfo->contents[0].bits = 0;
+    packetInfo->header.bits = 0;
+
+    packetInfo->header.data.type = mode;
+    packetInfo->header.data.clientID = iD;
 
     switch (mode)
     {
         case CLIENT_DATA:
-            packetInfo->contents[0].data.type = CLIENT_DATA;
-            packetInfo->contents[0].data.clientID = iD;
+
 
             break;
         case CLIENT_ACK:
-            packetInfo->contents[0].data.type = CLIENT_ACK;
-            packetInfo->contents[0].data.clientID = iD;
+
             break;
 
         case CLIENT_EXIT:
-            packetInfo->contents[0].data.type = CLIENT_EXIT;
-            packetInfo->contents[0].data.clientID = iD;
+
 
             break;
         
         case CLIENT_REG:
-            packetInfo->contents[0].data.type = CLIENT_REG;
-            packetInfo->contents[0].data.clientID = iD;
+
+            packetInfo->contents[CLIENT_1].data.avatar    = serverInfo.clientInfo[CLIENT_1].avatar;
+            packetInfo->contents[CLIENT_2].data.avatar    = serverInfo.clientInfo[CLIENT_2].avatar;
 
             if (!sSock_SendData(iD))
             { 

@@ -32,12 +32,15 @@
 class dConsoleDrv_c
 {
 private:
-    char player1;
+
     char player2;
 
 private:
     bool ValidateAvatar(char avatar);
     char ShotHandler(uint32_t row, uint32_t col);
+
+public:
+    char player1;
 
 public:
     bool Set_PlayerOneAvatar(char avatar);

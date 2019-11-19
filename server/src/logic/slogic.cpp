@@ -19,7 +19,11 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE           
     SOFTWARE.                                                                               
 **************************************************************************************************/
+//library includes
+#include <iostream>
 
+
+// program includes
 #include "project_ser.h"
 #include "slogic.h"
 #include "ssocket_drv.hpp"
@@ -58,8 +62,8 @@ void Update_GameState()
 
     if (!sSockDriver->sSock_GetPacket(packetInfo))
     {
-        iD = packetInfo->contents[0].data.clientID;
-        type = packetInfo->contents[0].data.type;
+        iD   = (clientID_e)    packetInfo->header.data.clientID;
+        type = (packetTypes_e) packetInfo->header.data.type;
 
         switch (type)
         {
@@ -73,10 +77,10 @@ void Update_GameState()
                 serverInfo.clientInfo[iD].state = false;
                 break;
 
-            case CLEINT_REG:
+            case CLIENT_REG:
             case CLIENT_ACK:
             default:
-                std::cout<< "\n| WARNING! UNEXPECTED PACKET TYPE.\n|";
+                std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE.\n|";
                 break;
         }
     }

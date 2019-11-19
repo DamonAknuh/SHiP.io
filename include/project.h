@@ -42,6 +42,8 @@
 #define SIO_GAME_SIZE           (30)
 #define SIO_EFF_GAME_SIZE       (SIO_GAME_SIZE - 2)
 
+#define UNUSED(x) (void) x
+
 /*************************************************************************************************/
 /*                            ENUMs TYPEDEFS & STRUCTURES                                        */
 /*************************************************************************************************/
@@ -56,10 +58,9 @@ typedef enum
 
 typedef enum
 {
-    CLIENT_1 = 1,
-    CLIENT_2 = 2,
+    CLIENT_1 = 0,
+    CLIENT_2 = 1,
 } clientID_e;
-
 
 
 typedef struct
@@ -70,19 +71,39 @@ typedef struct
         {
                 uint32_t type        : 4; // 0 for registration 1 for input data.
                 uint32_t clientID    : 1; // client ID for the two client programs.
+                uint32_t resv        : 3;
+                uint32_t response    : 8;
+                uint32_t length      : 16; 
+        } data; 
+        uint32_t bits; 
+    }; 
+}cHeader_t;
+
+typedef struct
+{
+    union
+    {
+        struct 
+        {
                 uint32_t state       : 1; // 0 for dead 1 for alive 
-                uint32_t resv        : 10; // reserved
+                uint32_t shot        : 1;
+                uint32_t sdir        : 2; 
+                uint32_t avatar      : 8; // reserved
+                uint32_t resv        : 4; // reserved
                 uint32_t x_loc       : 8;
                 uint32_t y_loc       : 8;
+
         } data; 
         uint32_t bits; 
     };
 }cData_t; 
 
 
+
 typedef struct 
 {
-    
+    cHeader_t header;
+
     union
     {
         cData_t contents[SIO_MAX_PLAYERS];

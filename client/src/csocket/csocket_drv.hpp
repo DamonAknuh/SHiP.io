@@ -30,6 +30,10 @@
 // Program Includes. 
 #include "project_cli.h"
 
+
+#define IP_ADDRESS_HOME "192.168.0.17"
+#define IP_ADDRESS_SCHL "134.87.166.231"
+
 /**
  * PLACE HOLDER FOR CLASS INFORMATION
  * 
@@ -47,6 +51,8 @@ public:
 
 private:
     bool cSock_SendData();
+    std::string cSock_GetIPAddress();
+
 
 private:
     SOCKET sock; 

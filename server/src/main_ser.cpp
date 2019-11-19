@@ -67,6 +67,10 @@ int main(int argc, char const *argv[])
         exit(0);
     }
 
+    std::cout << "________________________________" << std::endl;
+    std::cout << "|-------~FINISHED SETUP~-------|" << std::endl;e
+    std::cout << "|______________________________|" << std::endl;
+
     while(!serverInfo.GAME_OVER)
     {
         if (_kbhit() && _getch() == 't')

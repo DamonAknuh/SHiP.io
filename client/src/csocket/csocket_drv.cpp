@@ -29,6 +29,7 @@
 
 #include "csocket_drv.hpp"
 #include "project_cli.h"
+#include "display.h"
 
 /**
  * Initialization functionj for the the socket 
@@ -60,39 +61,49 @@ cSockDrv_c::cSockDrv_c() :
     }
 }
 
-bool cSockDrv_c::cSock_RegisterClient()
+std::string cSockDrv_c::cSock_GetIPAddress()
 {
-    clientPacket_t * const iPacketInfo = (clientPacket_t*) iPacketBuff;
-    std::string serverAddress; 
-    SOCKADDR_IN from;
+    std::string serverAddress;
     bool status = false; 
-    bool repeat = false; 
-    int32_t revStatus; 
-    int32_t flags = 0;
-    int32_t addressSize  = sizeof(serverAddress); // todo change these to class wide. 
-
-    std::cout << "|\n__________________________________________________________________________________" << std::endl;
+    std::cout << "|\n|_________________________________________________________________________________" << std::endl;
     std::cout << "| Enter the IP address of the server: \n";
 
-    // SET PLAYER ONE CHARACTER
     while(!status)
     {
         std::cout << "| --> Note: Input must in form of [ddd.ddd.ddd.ddd]\n";
         while(!_kbhit()){} // wait for input 
         // std::cin>>serverAddress;// "192.168.0.17" 
         // status = validateIPAddress(serverAddress); //@todo: 
-        serverAddress = "192.168.0.17";
+        serverAddress = IP_ADDRESS_HOME;
         status = true;  // temp
 
         std::cout << "| Entered: "<< serverAddress << std::endl;
     }
 
+    return serverAddress;
+}
+
+bool cSockDrv_c::cSock_RegisterClient()
+{
+    clientPacket_t * const iPacketInfo = (clientPacket_t*) iPacketBuff;
+    std::string serverAddress; 
+    SOCKADDR_IN from;
+    bool repeat = false; 
+    char p2Avatar;
+    int32_t revStatus; 
+    int32_t flags = 0;
+    int32_t addressSize  = sizeof(serverAddress); // todo change these to class wide. 
+
+    // GET SERVER IP ADDRESS
+    serverAddress = cSock_GetIPAddress();
+    
     char tempCArray[serverAddress.size() + 1];
     strcpy(tempCArray, serverAddress.c_str());
 
     server_address.sin_family = SIO_ADDRESS_FAMILY;
     server_address.sin_port = htons( SIO_PORT_BINDING );
     server_address.sin_addr.S_un.S_addr = inet_addr(tempCArray);  // find by command promt ipconfig
+
 
     std::cout << "|\n|_________________________________________________________________________________" << std::endl;
     std::cout << "| Sending Join request to server... ";
@@ -116,11 +127,25 @@ bool cSockDrv_c::cSock_RegisterClient()
         {
             iPacketBuff[revStatus] = 0;
 
-            if (iPacketInfo->contents[0].data.type == CLIENT_REG)
+            if (iPacketInfo->header.data.type == CLIENT_REG)
             { // todo add checks for corret addy family and ports.
-                clientInfo.clientID = iPacketInfo->contents[0].data.clientID;
+                dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
+                clientInfo.clientID = iPacketInfo->header.data.clientID;
+
+                if (clientInfo.clientID == CLIENT_1)
+                {
+                    p2Avatar = iPacketInfo->contents[CLIENT_2].data.avatar;
+                }
+                else if (clientInfo.clientID == CLIENT_2)
+                {
+                    p2Avatar = iPacketInfo->contents[CLIENT_1].data.avatar;
+                }
+
+                dConsoleDrv->Set_PlayerTwoAvatar(p2Avatar);
+
                 std::cout<< "Success!\n";
-                std::cout << "| You are player number: " << (uint32_t)clientInfo.clientID;
+                std::cout << "| You are player number: " << (uint32_t)clientInfo.clientID + 1;
+                std::cout << "| Opponent chosen Avatar: " << p2Avatar;
             }
             else 
             {
@@ -150,28 +175,38 @@ bool cSockDrv_c::cSock_SendData()
 
 bool cSockDrv_c::cSock_SendPacket(packetTypes_e mode)
 {
+    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance(); // @todo: Architectural violation
     clientPacket_t * const packetInfo = (clientPacket_t*) OPacketBuff;
-
+    clientID_e iD = clientInfo.clientID;
+//  ensure zerod packet contents
     packetInfo->contents[0].bits = 0;
+    packetInfo->contents[1].bits = 0;
+    packetInfo->header.bits = 0;
+
+    packetInfo->header.data.type = mode;
+    packetInfo->header.data.clientID = iD;
 
     switch (mode)
     {
         case CLIENT_DATA:
-            packetInfo->contents[0].data.type = CLIENT_DATA;
+            // packetInfo->contents[iD].data.x_loc = clientInfo.xLoc;
+            // packetInfo->contents[iD].data.y_loc = clientInfo.yLoc; 
+            // packetInfo->contents[iD].data.shot  = (clientInfo.shotCounter == 1);
+            // packetInfo->contents[iD].data.sdir  = clientInfo.impInput;
+            // packetInfo->contents[iD].data.state =  
+
 
             break;
         case CLIENT_ACK:
-            packetInfo->contents[0].data.type = CLIENT_ACK;
 
             break;
 
         case CLIENT_EXIT:
-            packetInfo->contents[0].data.type = CLIENT_EXIT;
 
             break;
         
         case CLIENT_REG:
-            packetInfo->contents[0].data.type = CLIENT_REG;
+            packetInfo->header.data.response = dConsoleDrv->player1; // send avatar information
 
             if (!cSock_SendData())
             { 
