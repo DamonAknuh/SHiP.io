@@ -95,9 +95,11 @@ void Draw_Game()
 
 void Send_Data()
 {
-    cSockDrv_c * cSockDrv = cSockDrv_Handle::Handler_GetInstance();
-
-    cSockDrv->cSock_SendPacket(CLIENT_DATA);
+    if (clientInfo.input != IO_NULL)
+    {
+        cSockDrv_c * cSockDrv = cSockDrv_Handle::Handler_GetInstance();
+        cSockDrv->cSock_SendPacket(CLIENT_DATA);
+    }
 }
 
 void Get_Input()
@@ -165,6 +167,7 @@ int main(int argc, char const *argv[])
         Calculate_GameState();
         Send_Data();
     }
+
     Draw_Game();
 
     Game_Over();

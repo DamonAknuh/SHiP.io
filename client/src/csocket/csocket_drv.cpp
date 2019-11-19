@@ -177,7 +177,7 @@ bool cSockDrv_c::cSock_SendPacket(packetTypes_e mode)
 {
     dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance(); // @todo: Architectural violation
     clientPacket_t * const packetInfo = (clientPacket_t*) OPacketBuff;
-    clientID_e iD = clientInfo.clientID;
+    clientID_e iD = (clientID_e) clientInfo.clientID;
 //  ensure zerod packet contents
     packetInfo->contents[0].bits = 0;
     packetInfo->contents[1].bits = 0;
@@ -189,14 +189,18 @@ bool cSockDrv_c::cSock_SendPacket(packetTypes_e mode)
     switch (mode)
     {
         case CLIENT_DATA:
-            // packetInfo->contents[iD].data.x_loc = clientInfo.xLoc;
-            // packetInfo->contents[iD].data.y_loc = clientInfo.yLoc; 
-            // packetInfo->contents[iD].data.shot  = (clientInfo.shotCounter == 1);
-            // packetInfo->contents[iD].data.sdir  = clientInfo.impInput;
-            // packetInfo->contents[iD].data.state =  
+            packetInfo->contents[iD].data.x_loc = clientInfo.xLoc;
+            packetInfo->contents[iD].data.y_loc = clientInfo.yLoc;
+            packetInfo->contents[iD].data.shot  = (clientInfo.shotCounter == 1);
+            packetInfo->contents[iD].data.sdir  = clientInfo.impInput;
+            packetInfo->contents[iD].data.state = clientInfo.GAME_OVER;
 
-
+            if (!cSock_SendData())
+            { 
+                return false; 
+            }
             break;
+
         case CLIENT_ACK:
 
             break;
