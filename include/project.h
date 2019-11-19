@@ -39,8 +39,10 @@
 
 #define SIO_MAX_PLAYERS         (2)
 #define SIO_PACKET_SIZE         (256)
-#define SIO_GAME_SIZE           (30)
-#define SIO_EFF_GAME_SIZE       (SIO_GAME_SIZE - 2)
+#define SIO_GAME_SIZE_X         (40)
+#define SIO_EFF_GAME_SIZE_X     (SIO_GAME_SIZE_X-2)
+#define SIO_GAME_SIZE_Y         (25)
+
 
 #define UNUSED(x) (void) x
 

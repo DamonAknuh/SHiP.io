@@ -34,8 +34,8 @@ cGObjDrv_c::cGObjDrv_c()
 bool cGObjDrv_c::cGObj_InitCInfo()
 {
     // randomly spawn fruit on map
-    clientInfo.fxLoc = (rand() % SIO_EFF_GAME_SIZE) + 1;
-    clientInfo.fyLoc = (rand() % SIO_EFF_GAME_SIZE) + 1;
+    clientInfo.fxLoc = (rand() % SIO_EFF_GAME_SIZE_X) + 1;
+    clientInfo.fyLoc = (rand() % SIO_GAME_SIZE_Y);
 
     // set weapons to 0
     clientInfo.weapons = 0;  
@@ -48,14 +48,14 @@ bool cGObjDrv_c::cGObj_InitCInfo()
         clientInfo.xLoc = 4;
         clientInfo.yLoc = 3;
 
-        clientInfo.pxLoc = SIO_GAME_SIZE - 4;
-        clientInfo.pyLoc = SIO_GAME_SIZE - 3;
+        clientInfo.pxLoc = SIO_GAME_SIZE_X - 4;
+        clientInfo.pyLoc = SIO_GAME_SIZE_Y - 3;
 
     }
     else if (clientInfo.clientID == 1)
     {
-        clientInfo.xLoc = SIO_GAME_SIZE - 4;
-        clientInfo.yLoc = SIO_GAME_SIZE - 3;
+        clientInfo.xLoc = SIO_GAME_SIZE_X - 4;
+        clientInfo.yLoc = SIO_GAME_SIZE_Y - 3;
 
         clientInfo.pxLoc = 4;
         clientInfo.pyLoc = 3;
