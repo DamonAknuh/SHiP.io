@@ -25,30 +25,55 @@ Deliver a simple and creative computer game which showcases some form of end use
 
 build the program with the following command  
 
-for Server
+for Server  
+```
     /c/REPOS/SHiP.io/server$ make ../SHIP_SER
-  
+```
+```
     C:\REPOS\SHiP.io> .\SHIP_SER.exe
-
-for client
+```
+for client  
+```
     /c/REPOS/SHiP.io/server$ make ../SHIP_SER
-  
+```
+```
     C:\REPOS\SHiP.io> .\SHIP_CLI.exe
+```
 
-
-### Todo:
+### TODOS:
+  - [ ] - SETUP
+    - [X] - Makefiles
+    - [X] - Folder structure
+    - [ ] - Batch script to compile both sources.
+    - [ ] - Test Framework
   - [X] - GAME OUTPUT
-  - [X] - CLIENT REGISTRATION
-  - [X] - SHOOTING FUNCTIONALITY
-  - [X] - PACKET STRUCTS
-  - [ ] - figure out ending trigger
-  - [ ] - figure out client talking to each other
-  - [ ] - Update_GameState function
-  - [ ] - Send data packet function
-  - [ ] - figure out pimpInput and other player shooting. need new packet ele
-  - [ ] - No need to redraw if no client inputs and no packets recieved. 
-  - [ ] - Replace console with openGL or 2D game library. 
-  - [ ] - INDEPENDENT GAME WIDTH AND HEIGHT
+    - [X] - Console
+    - [X] - shot handler
+    - [X] - Independent game width and height
+    - [ ] - No need to redraw if no client inputs and no packets recieved. 
+    - [ ] - Replace console with openGL or 2D game library. 
+  - [ ] - INPUT OUTPUT
+    - [X] - WASD Movement
+    - [X] - Shoot conditions
+    - [X] - player/fruit collisions
+    - [X] - Game exit key 't'
+    - [X] - Choose player avatar
+    - [ ] - input server IP address
+  - [ ] - CLIENT SERVER
+    - [X] - Client ID Registration
+    - [X] - Client send Avatar & and recieve enemies avatar
+    - [X] - packet header struct
+    - [X] - packet content struct
+    - [X] - Client send data to server
+    - [ ] - Server send data to clients
+    - [ ] - Client recieve update data from server
+    - [ ] - Game over conditions and trigger
+    - [ ] - Enemy player shoots against other player. 
+    - [ ] - Play again conditions and logic. . 
+
+
+
+
 
 
 
