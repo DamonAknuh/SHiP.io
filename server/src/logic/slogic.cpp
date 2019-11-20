@@ -1,4 +1,5 @@
 /********************************************************************************************                                                                                       
+    MIT License                                                                             
     Copyright (c) 2019 Damon Hunka                                                          
                                                                                            
     Permission is hereby granted, free of charge, to any person obtaining a copy            
@@ -78,11 +79,11 @@ void Update_GameState()
                 serverInfo.clientInfo[iD].state = packetInfo->contents[iD].data.state;
                 serverInfo.clientInfo[iD].shot  = packetInfo->contents[iD].data.shot;
                 serverInfo.clientInfo[iD].sdir  = packetInfo->contents[iD].data.sdir;
+
                 std::cout << "| xLoc:   " << (uint32_t) serverInfo.clientInfo[iD].xLoc  << std::endl; 
                 std::cout << "| yLoc:   " << (uint32_t) serverInfo.clientInfo[iD].yLoc  << std::endl; 
                 std::cout << "| state:  " << (uint32_t) serverInfo.clientInfo[iD].state << std::endl; 
                 std::cout << "| shot:   " << (uint32_t) serverInfo.clientInfo[iD].shot  << std::endl; 
-
                 break;
 
             case CLIENT_EXIT:

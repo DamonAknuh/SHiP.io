@@ -1,4 +1,5 @@
 /********************************************************************************************
+    MIT License                                                                             
     Copyright (c) 2019 Damon Hunka                                                          
                                                                                            
     Permission is hereby granted, free of charge, to any person obtaining a copy            
@@ -32,7 +33,9 @@
 
 
 #define IP_ADDRESS_HOME "192.168.0.17"
-#define IP_ADDRESS_SCHL "134.87.166.231"
+#define IP_ADDRESS_ECS  "134.87.162.25"
+#define IP_ADDRESS_SCHL "134.87.162.25" 
+
 
 /**
  * PLACE HOLDER FOR CLASS INFORMATION

@@ -32,6 +32,7 @@ for Server
 ```
     C:\REPOS\SHiP.io> .\SHIP_SER.exe
 ```
+
 for client  
 ```
     /c/REPOS/SHiP.io/server$ make ../SHIP_SER
@@ -70,12 +71,6 @@ for client
     - [ ] - Game over conditions and trigger
     - [ ] - Enemy player shoots against other player. 
     - [ ] - Play again conditions and logic. . 
-
-
-
-
-
-
 
 ## Maintenance
 
