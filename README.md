@@ -45,7 +45,7 @@ for client
   - [ ] - SETUP
     - [X] - Makefiles
     - [X] - Folder structure
-    - [ ] - Batch script to compile both sources.
+    - [X] - Batch script to compile both sources.
     - [ ] - Test Framework
   - [X] - GAME OUTPUT
     - [X] - Console
