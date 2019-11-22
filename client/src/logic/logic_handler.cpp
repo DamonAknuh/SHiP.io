@@ -51,7 +51,6 @@ bool cGObjDrv_c::cGObj_InitCInfo()
 
         clientInfo.pxLoc = SIO_GAME_SIZE_X - 4;
         clientInfo.pyLoc = SIO_GAME_SIZE_Y - 3;
-
     }
     else if (clientInfo.clientID == 1)
     {
@@ -60,7 +59,6 @@ bool cGObjDrv_c::cGObj_InitCInfo()
 
         clientInfo.pxLoc = 4;
         clientInfo.pyLoc = 3;
-
     }
 
     clientInfo.impInput = IO_NULL; // reset shot to zero

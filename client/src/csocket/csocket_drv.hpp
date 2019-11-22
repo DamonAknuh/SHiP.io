@@ -45,24 +45,27 @@
 class cSockDrv_c
 {
 public:
+    char iPacketBuff[SIO_PACKET_SIZE];
+
+public:
     
     cSockDrv_c();
     ~cSockDrv_c();
     bool cSock_RegisterClient();
     bool cSock_SendPacket(packetTypes_e mode);
     void cSock_RecieveData(uint64_t &input);
+    bool sSock_GetPacket();
 
 private:
     bool cSock_SendData();
     std::string cSock_GetIPAddress();
-
 
 private:
     SOCKET sock; 
     SOCKADDR_IN server_address;
     WSADATA winsock_data;
     char OPacketBuff[SIO_PACKET_SIZE];
-    char iPacketBuff[SIO_PACKET_SIZE];
+
     uint32_t lastFailed; 
 };
 

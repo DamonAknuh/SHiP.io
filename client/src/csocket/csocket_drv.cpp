@@ -62,6 +62,23 @@ cSockDrv_c::cSockDrv_c() :
     }
 }
 
+bool cSockDrv_c::sSock_GetPacket()
+{
+    SOCKADDR_IN from;
+    int32_t revStatus;     // todo consolidate
+    int32_t addressSize  = sizeof(server_address);
+    int32_t flags = 0; 
+
+    revStatus = recvfrom(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&from, &addressSize );
+    if( revStatus == SOCKET_ERROR )
+    {
+        printf( "recvfrom returned SOCKET_ERROR, WSAGetLastError() %d", WSAGetLastError() );
+        return false; 
+    }
+
+    return true;
+}
+
 std::string cSockDrv_c::cSock_GetIPAddress()
 {
     std::string serverAddress;
