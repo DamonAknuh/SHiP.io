@@ -48,6 +48,15 @@
 /*************************************************************************************************/
 /*                           ENUMs TYPEDEFS & STRUCTURES                                         */
 /*************************************************************************************************/
+typedef struct 
+{
+    uint8_t  xLoc;
+    uint8_t  yLoc;
+    uint8_t  state;
+    uint8_t  shot;
+    uint8_t  sdir;
+    uint8_t  avatar;
+}pInfo_t;
 
 typedef enum
 {
@@ -63,24 +72,23 @@ typedef enum
 typedef struct
 {
     uint8_t  GAME_OVER;
-    uint8_t  clientID;
     
+    pInfo_t pInfo[SIO_MAX_PLAYERS];
 
-    uint8_t  xLoc;
-    uint8_t  yLoc;
     uint8_t  weapons; 
     uint16_t input;
     uint16_t impInput;
     uint8_t  shotCounter;
 
-    uint8_t  pxLoc;
-    uint8_t  pyLoc;
-    uint8_t  pImpInput;
-
     uint8_t  fxLoc;
     uint8_t  fyLoc;
+
     // more to come. 
 }clientInfo_t;
+
+extern clientID_e g_ClientID;
+extern clientID_e g_pClientID;
+
 
 extern clientInfo_t clientInfo;
 

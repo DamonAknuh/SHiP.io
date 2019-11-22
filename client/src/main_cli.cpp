@@ -38,6 +38,9 @@
 #include "display.h"
 
 clientInfo_t clientInfo;
+// default to first client. will be reset anyways in csock registeration. 
+clientID_e g_ClientID = CLIENT_1; 
+clientID_e g_pClientID = CLIENT_2;
 
 bool Game_Over()
 {
@@ -103,6 +106,56 @@ void Send_Data()
     }
 }
 
+void Get_ServerData()
+{
+    cSockDrv_c * cSockDriver    = cSockDrv_Handle::Handler_GetInstance();
+    clientPacket_t * packetInfo = (clientPacket_t*) cSockDriver->iPacketBuff;
+    clientID_e iD;
+    clientID_e pID;
+    packetTypes_e type; 
+
+    if (cSockDriver->sSock_GetPacket())
+    {
+        iD   = (clientID_e)    g_ClientID;
+        pID  = (clientID_e)    g_pClientID;
+        type = (packetTypes_e) packetInfo->header.data.type;
+
+        switch (type)
+        {
+            case CLIENT_DATA:
+                clientInfo.pInfo[iD].xLoc  = packetInfo->contents[iD].data.x_loc;
+                clientInfo.pInfo[iD].yLoc  = packetInfo->contents[iD].data.y_loc;
+                
+                clientInfo.pInfo[iD].shot  = packetInfo->contents[iD].data.shot;
+                clientInfo.pInfo[iD].sdir  = packetInfo->contents[iD].data.sdir;
+
+                
+                clientInfo.pInfo[pID].xLoc  = packetInfo->contents[pID].data.x_loc;
+                clientInfo.pInfo[pID].yLoc  = packetInfo->contents[pID].data.y_loc;
+
+
+                clientInfo.GAME_OVER = packetInfo->contents[iD].data.state;
+
+                break;
+
+            case CLIENT_EXIT:
+                //@todo: game over condition rework. 
+                if (packetInfo->contents[iD].data.state == false)
+                {
+                    clientInfo.GAME_OVER = true;
+                }
+
+                break;
+
+            case CLIENT_REG:
+            case CLIENT_ACK:
+            default:
+                std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE.\n|";
+                break;
+        }
+    }
+}
+
 void Get_Input()
 {
     clientInfo.input = IO_NULL; // no IO detected
@@ -165,6 +218,7 @@ int main(int argc, char const *argv[])
 
         Draw_Game();
         Get_Input();
+        Get_ServerData();
         Calculate_GameState();
         Send_Data();
     }

@@ -44,21 +44,21 @@ bool cGObjDrv_c::cGObj_InitCInfo()
 
     // temporary untill can handle it in sock initialization.
     // todo make logic layer a class driver object.
-    if (clientInfo.clientID == 0)
+    if (g_ClientID == CLIENT_1) // this should be given in registration. 
     {
-        clientInfo.xLoc = 4;
-        clientInfo.yLoc = 3;
+        clientInfo.pInfo[g_ClientID].xLoc = 4;
+        clientInfo.pInfo[g_ClientID].yLoc = 3;
 
-        clientInfo.pxLoc = SIO_GAME_SIZE_X - 4;
-        clientInfo.pyLoc = SIO_GAME_SIZE_Y - 3;
+        clientInfo.pInfo[g_pClientID].xLoc = SIO_GAME_SIZE_X - 4;
+        clientInfo.pInfo[g_pClientID].yLoc = SIO_GAME_SIZE_Y - 3;
     }
-    else if (clientInfo.clientID == 1)
+    else if (g_ClientID == CLIENT_2)
     {
-        clientInfo.xLoc = SIO_GAME_SIZE_X - 4;
-        clientInfo.yLoc = SIO_GAME_SIZE_Y - 3;
+        clientInfo.pInfo[g_ClientID].xLoc = SIO_GAME_SIZE_X - 4;
+        clientInfo.pInfo[g_ClientID].yLoc = SIO_GAME_SIZE_Y - 3;
 
-        clientInfo.pxLoc = 4;
-        clientInfo.pyLoc = 3;
+        clientInfo.pInfo[g_pClientID].xLoc = 4;
+        clientInfo.pInfo[g_pClientID].yLoc = 3;
     }
 
     clientInfo.impInput = IO_NULL; // reset shot to zero

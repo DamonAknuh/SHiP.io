@@ -34,28 +34,32 @@ char dConsoleDrv_c::ShotHandler(uint32_t row, uint32_t col)
     switch (clientInfo.impInput)
     {
         case IO_UP:
-                if ( (row < clientInfo.yLoc) && (col == clientInfo.xLoc))
+                if ( (row < clientInfo.pInfo[g_ClientID].yLoc) && 
+                        (col == clientInfo.pInfo[g_ClientID].xLoc))
                 {
                     return '|';
                 }
             break;
         
         case IO_DOWN:
-                if ((row > clientInfo.yLoc) &&  (col == clientInfo.xLoc))
+                if ((row > clientInfo.pInfo[g_ClientID].yLoc) && 
+                        (col == clientInfo.pInfo[g_ClientID].xLoc))
                 {
                     return '|';
                 }
             break;
 
         case IO_LEFT:
-                if ((col < clientInfo.xLoc) && (row == clientInfo.yLoc))
+                if ((col < clientInfo.pInfo[g_ClientID].xLoc) && 
+                        (row == clientInfo.pInfo[g_ClientID].yLoc))
                 {
                     return '-';
                 }
             break;
 
         case IO_RIGHT:
-                if ((col > clientInfo.xLoc) && (row == clientInfo.yLoc))
+                if ((col > clientInfo.pInfo[g_ClientID].xLoc) && 
+                        (row == clientInfo.pInfo[g_ClientID].yLoc))
                 {
                     return '-';
                 }
@@ -131,15 +135,17 @@ void dConsoleDrv_c::Draw_Game()
             {
                 std::cout << "|";
             }
-            else if (row == clientInfo.yLoc && col == clientInfo.xLoc) // Draw Player1
+            else if ((row == clientInfo.pInfo[g_ClientID].yLoc) && 
+                        (col == clientInfo.pInfo[g_ClientID].xLoc)) // Draw Player1
             {
                 std::cout << player1;
             }
-            else if (row == clientInfo.fyLoc && col == clientInfo.fxLoc) // Draw Fruit
+            else if ((row == clientInfo.fyLoc) && (col == clientInfo.fxLoc)) // Draw Fruit
             {
                 std::cout << "+";
             }
-            else if(row == clientInfo.pyLoc && col == clientInfo.pxLoc) // Draw Player2
+            else if((row == clientInfo.pInfo[g_pClientID].yLoc) && 
+                        (col == clientInfo.pInfo[g_pClientID].xLoc)) // Draw Player2
             {
                 std::cout << player2;
             }

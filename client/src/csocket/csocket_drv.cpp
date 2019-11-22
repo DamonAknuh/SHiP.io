@@ -148,21 +148,23 @@ bool cSockDrv_c::cSock_RegisterClient()
             if (iPacketInfo->header.data.type == CLIENT_REG)
             { // todo add checks for corret addy family and ports.
                 dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
-                clientInfo.clientID = iPacketInfo->header.data.clientID;
+                g_ClientID = (clientID_e) iPacketInfo->header.data.clientID;
 
-                if (clientInfo.clientID == CLIENT_1)
+                if (g_ClientID == CLIENT_1)
                 {
                     p2Avatar = iPacketInfo->contents[CLIENT_2].data.avatar;
+                    g_pClientID = CLIENT_2;
                 }
-                else if (clientInfo.clientID == CLIENT_2)
+                else if (g_ClientID == CLIENT_2)
                 {
                     p2Avatar = iPacketInfo->contents[CLIENT_1].data.avatar;
+                    g_pClientID = CLIENT_1;
                 }
 
                 dConsoleDrv->Set_PlayerTwoAvatar(p2Avatar);
 
                 std::cout<< "Success!\n";
-                std::cout << "| You are player number: " << (uint32_t)clientInfo.clientID + 1;
+                std::cout << "| You are player number: " << (uint32_t)g_ClientID + 1;
                 std::cout << "| Opponent chosen Avatar: " << p2Avatar;
             }
             else 
@@ -195,7 +197,7 @@ bool cSockDrv_c::cSock_SendPacket(packetTypes_e mode)
 {
     dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance(); // @todo: Architectural violation
     clientPacket_t * const packetInfo = (clientPacket_t*) OPacketBuff;
-    clientID_e iD = (clientID_e) clientInfo.clientID;
+    clientID_e iD = (clientID_e) g_ClientID;
 //  ensure zerod packet contents
     packetInfo->contents[0].bits = 0;
     packetInfo->contents[1].bits = 0;
@@ -207,8 +209,8 @@ bool cSockDrv_c::cSock_SendPacket(packetTypes_e mode)
     switch (mode)
     {
         case CLIENT_DATA:
-            packetInfo->contents[iD].data.x_loc = clientInfo.xLoc;
-            packetInfo->contents[iD].data.y_loc = clientInfo.yLoc;
+            packetInfo->contents[iD].data.x_loc = clientInfo.pInfo[iD].xLoc;
+            packetInfo->contents[iD].data.y_loc = clientInfo.pInfo[iD].yLoc;
             packetInfo->contents[iD].data.shot  = (clientInfo.shotCounter == 1);
             packetInfo->contents[iD].data.sdir  = clientInfo.impInput;
             packetInfo->contents[iD].data.state = clientInfo.GAME_OVER;

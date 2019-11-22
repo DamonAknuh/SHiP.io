@@ -30,16 +30,16 @@
 
 void cGObjDrv_c::cGObj_IO_Up()
 {
-    int8_t tempYLoc = clientInfo.yLoc-1;
+    int8_t tempYLoc = clientInfo.pInfo[g_ClientID].yLoc-1;
 
-    if ((tempYLoc != clientInfo.pyLoc) || (clientInfo.xLoc != clientInfo.pxLoc)) // handle player player conflict. 
+    if ((tempYLoc != clientInfo.pInfo[g_pClientID].yLoc) || (clientInfo.pInfo[g_ClientID].xLoc != clientInfo.pInfo[g_pClientID].xLoc)) // handle player player conflict. 
     {
         if (tempYLoc < 0)
         {
             tempYLoc = SIO_GAME_SIZE_Y-1;
         }
 
-        if((tempYLoc == clientInfo.fyLoc) && (clientInfo.fxLoc == clientInfo.xLoc)) // handles fruit pickup
+        if((tempYLoc == clientInfo.fyLoc) && (clientInfo.fxLoc == clientInfo.pInfo[g_ClientID].xLoc)) // handles fruit pickup
         {
             // increment weapons.
             clientInfo.weapons++;
@@ -48,7 +48,7 @@ void cGObjDrv_c::cGObj_IO_Up()
             clientInfo.fxLoc = rand() % SIO_EFF_GAME_SIZE_X;
             clientInfo.fyLoc = rand() % SIO_GAME_SIZE_Y;
         }
-        clientInfo.yLoc = tempYLoc;
+        clientInfo.pInfo[g_ClientID].yLoc = tempYLoc;
 
         // Only want to save last input when not currently shooting lasers. 
         if (!clientInfo.shotCounter)
@@ -61,13 +61,13 @@ void cGObjDrv_c::cGObj_IO_Up()
 
 void cGObjDrv_c::cGObj_IO_Down()
 {
-    uint8_t tempYLoc = clientInfo.yLoc + 1;
+    uint8_t tempYLoc = clientInfo.pInfo[g_ClientID].yLoc + 1;
 
-    if ((tempYLoc != clientInfo.pyLoc) || (clientInfo.xLoc != clientInfo.pxLoc)) // handle player player conflict. 
+    if ((tempYLoc != clientInfo.pInfo[g_pClientID].yLoc) || (clientInfo.pInfo[g_ClientID].xLoc != clientInfo.pInfo[g_pClientID].xLoc)) // handle player player conflict. 
     {
         tempYLoc = tempYLoc % SIO_GAME_SIZE_Y;
 
-        if((tempYLoc == clientInfo.fyLoc) && (clientInfo.fxLoc == clientInfo.xLoc)) // handles fruit pickup
+        if((tempYLoc == clientInfo.fyLoc) && (clientInfo.fxLoc == clientInfo.pInfo[g_ClientID].xLoc)) // handles fruit pickup
         {
             // increment weapons.
             clientInfo.weapons++;
@@ -78,7 +78,7 @@ void cGObjDrv_c::cGObj_IO_Down()
         }
 
 
-        clientInfo.yLoc = tempYLoc;
+        clientInfo.pInfo[g_ClientID].yLoc = tempYLoc;
 
         // Only want to save last input when not currently shooting lasers. 
         if (!clientInfo.shotCounter)
@@ -93,9 +93,9 @@ void cGObjDrv_c::cGObj_IO_Down()
 
 void cGObjDrv_c::cGObj_IO_Right()
 {
-    uint8_t tempXLoc = clientInfo.xLoc + 1;
+    uint8_t tempXLoc = clientInfo.pInfo[g_ClientID].xLoc + 1;
 
-    if ((tempXLoc != clientInfo.pxLoc) || (clientInfo.yLoc != clientInfo.pyLoc)) // handle player player conflict. 
+    if ((tempXLoc != clientInfo.pInfo[g_pClientID].xLoc) || (clientInfo.pInfo[g_ClientID].yLoc != clientInfo.pInfo[g_pClientID].yLoc)) // handle player player conflict. 
     {
         tempXLoc = tempXLoc % SIO_EFF_GAME_SIZE_X;
         
@@ -104,7 +104,7 @@ void cGObjDrv_c::cGObj_IO_Right()
             tempXLoc = 1; 
         }
 
-        if((tempXLoc == clientInfo.fxLoc) && (clientInfo.fyLoc == clientInfo.yLoc)) // handles fruit pickup
+        if((tempXLoc == clientInfo.fxLoc) && (clientInfo.fyLoc == clientInfo.pInfo[g_ClientID].yLoc)) // handles fruit pickup
         {
             // increment weapons.
             clientInfo.weapons++;
@@ -114,7 +114,7 @@ void cGObjDrv_c::cGObj_IO_Right()
             clientInfo.fyLoc = (rand() % (SIO_GAME_SIZE_Y-1)) +1;
         }
 
-        clientInfo.xLoc = tempXLoc;
+        clientInfo.pInfo[g_ClientID].xLoc = tempXLoc;
 
         // Only want to save last input when not currently shooting lasers. 
         if (!clientInfo.shotCounter)
@@ -126,16 +126,16 @@ void cGObjDrv_c::cGObj_IO_Right()
 
 void cGObjDrv_c::cGObj_IO_Left()
 {
-    int8_t tempXLoc = clientInfo.xLoc - 1;
+    int8_t tempXLoc = clientInfo.pInfo[g_ClientID].xLoc - 1;
 
-    if ((tempXLoc != clientInfo.pxLoc) || (clientInfo.yLoc != clientInfo.pyLoc)) // handle player player conflict. 
+    if ((tempXLoc != clientInfo.pInfo[g_pClientID].xLoc) || (clientInfo.pInfo[g_ClientID].yLoc != clientInfo.pInfo[g_pClientID].yLoc)) // handle player player conflict. 
     {
         if (tempXLoc <= 0)
         {
             tempXLoc = SIO_EFF_GAME_SIZE_X;
         }
 
-        if((tempXLoc == clientInfo.fxLoc) && (clientInfo.fyLoc == clientInfo.yLoc)) // handles fruit pickup
+        if((tempXLoc == clientInfo.fxLoc) && (clientInfo.fyLoc == clientInfo.pInfo[g_ClientID].yLoc)) // handles fruit pickup
         {
             // increment weapons.
             clientInfo.weapons++;
@@ -146,7 +146,7 @@ void cGObjDrv_c::cGObj_IO_Left()
         }
 
 
-        clientInfo.xLoc = tempXLoc;
+        clientInfo.pInfo[g_ClientID].xLoc = tempXLoc;
 
         // Only want to save last input when not currently shooting lasers. 
         if (!clientInfo.shotCounter)
@@ -172,7 +172,7 @@ void cGObjDrv_c::cGObj_IO_Shoot()
         {
             case (IO_LEFT):
                 // if players are on same plane, and valid shot left. 
-                if ((clientInfo.yLoc == clientInfo.pyLoc) && (clientInfo.xLoc > clientInfo.pxLoc))
+                if ((clientInfo.pInfo[g_ClientID].yLoc == clientInfo.pInfo[g_pClientID].yLoc) && (clientInfo.pInfo[g_ClientID].xLoc > clientInfo.pInfo[g_pClientID].xLoc))
                 {
                     dConsoleDrv->Set_PlayerTwoAvatar('X');
                     clientInfo.GAME_OVER = true; 
@@ -180,7 +180,7 @@ void cGObjDrv_c::cGObj_IO_Shoot()
                 break;
 
             case (IO_RIGHT):
-                if ((clientInfo.yLoc == clientInfo.pyLoc) && (clientInfo.xLoc < clientInfo.pxLoc))
+                if ((clientInfo.pInfo[g_ClientID].yLoc == clientInfo.pInfo[g_pClientID].yLoc) && (clientInfo.pInfo[g_ClientID].xLoc < clientInfo.pInfo[g_pClientID].xLoc))
                 {
                     dConsoleDrv->Set_PlayerTwoAvatar('X');
                     clientInfo.GAME_OVER = true; 
@@ -188,7 +188,7 @@ void cGObjDrv_c::cGObj_IO_Shoot()
                 break;
 
             case (IO_UP):
-                if ((clientInfo.xLoc == clientInfo.pxLoc) && (clientInfo.yLoc > clientInfo.pyLoc))
+                if ((clientInfo.pInfo[g_ClientID].xLoc == clientInfo.pInfo[g_pClientID].xLoc) && (clientInfo.pInfo[g_ClientID].yLoc > clientInfo.pInfo[g_pClientID].yLoc))
                 {
                     dConsoleDrv->Set_PlayerTwoAvatar('X');
                     clientInfo.GAME_OVER = true; 
@@ -196,7 +196,7 @@ void cGObjDrv_c::cGObj_IO_Shoot()
                 break;
 
             case (IO_DOWN):
-                if ((clientInfo.xLoc == clientInfo.pxLoc) && (clientInfo.yLoc < clientInfo.pyLoc))
+                if ((clientInfo.pInfo[g_ClientID].xLoc == clientInfo.pInfo[g_pClientID].xLoc) && (clientInfo.pInfo[g_ClientID].yLoc < clientInfo.pInfo[g_pClientID].yLoc))
                 {
                     dConsoleDrv->Set_PlayerTwoAvatar('X');
                     clientInfo.GAME_OVER = true; 
