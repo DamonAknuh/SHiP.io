@@ -26,6 +26,7 @@
 #define __SLOGIC_H
 
 void Update_GameState();
+void Update_Clients();
 
 
 /**
@@ -39,6 +40,7 @@ private:
     /* Data */
     
 public:
+    void sLogic_Unpack();
     // Initialization
     sLogicDrv_c();
     bool sLogic_InitSInfo();

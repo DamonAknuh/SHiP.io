@@ -28,8 +28,8 @@
 #include <conio.h> // for kbhit and getch.
 
 // program includes
-#include "project_ser.h"
-#include "slogic.h"
+#include "project_ser.hpp"
+#include "slogic.hpp"
 #include "ssocket_drv.hpp"
 
 
@@ -80,6 +80,7 @@ int main(int argc, char const *argv[])
         }
 
         Update_GameState();
+        Update_Clients();
     }
 
     exit(0);

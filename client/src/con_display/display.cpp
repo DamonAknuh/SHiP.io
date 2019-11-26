@@ -26,8 +26,8 @@
 #include <conio.h> // for kbhit and getch.
 
 // program includes
-#include "project_cli.h"
-#include "display.h"
+#include "project_cli.hpp"
+#include "display.hpp"
 
 char dConsoleDrv_c::ShotHandler(uint32_t row, uint32_t col)
 {

@@ -18,7 +18,7 @@
     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE             
     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER                  
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,           
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE           
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER D`EALINGS IN THE           
     SOFTWARE.                                                                               
 **************************************************************************************************/
 
@@ -29,8 +29,8 @@
 
 
 #include "csocket_drv.hpp"
-#include "project_cli.h"
-#include "display.h"
+#include "project_cli.hpp"
+#include "display.hpp"
 
 /**
  * Initialization functionj for the the socket 
@@ -92,7 +92,7 @@ std::string cSockDrv_c::cSock_GetIPAddress()
         while(!_kbhit()){} // wait for input 
         // std::cin>>serverAddress;// "192.168.0.17" 
         // status = validateIPAddress(serverAddress); //@todo: 
-        serverAddress = IP_ADDRESS_HOME;
+        serverAddress = IP_ADDRESS_ELW;
         status = true;  // temp
 
         std::cout << "| Entered: "<< serverAddress << std::endl;

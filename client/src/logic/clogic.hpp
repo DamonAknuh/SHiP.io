@@ -26,7 +26,7 @@
 #define __CLOGIC_H
 
 #include <stdint.h>
-#include "project_cli.h"
+#include "project_cli.hpp"
 
 void Calculate_GameState(); 
 

@@ -32,10 +32,10 @@
 
 
 // Customized Includes
-#include "project_cli.h"
+#include "project_cli.hpp"
 #include "csocket_drv.hpp"
-#include "clogic.h"
-#include "display.h"
+#include "clogic.hpp"
+#include "display.hpp"
 
 clientInfo_t clientInfo;
 // default to first client. will be reset anyways in csock registeration. 
@@ -123,12 +123,12 @@ void Get_ServerData()
         switch (type)
         {
             case CLIENT_DATA:
-                clientInfo.pInfo[iD].xLoc  = packetInfo->contents[iD].data.x_loc;
-                clientInfo.pInfo[iD].yLoc  = packetInfo->contents[iD].data.y_loc;
+                //@todo: do we need to grab our data?
+                // clientInfo.pInfo[iD].xLoc  = packetInfo->contents[iD].data.x_loc;
+                // clientInfo.pInfo[iD].yLoc  = packetInfo->contents[iD].data.y_loc;
                 
-                clientInfo.pInfo[iD].shot  = packetInfo->contents[iD].data.shot;
-                clientInfo.pInfo[iD].sdir  = packetInfo->contents[iD].data.sdir;
-
+                // clientInfo.pInfo[iD].shot  = packetInfo->contents[iD].data.shot;
+                // clientInfo.pInfo[iD].sdir  = packetInfo->contents[iD].data.sdir;
                 
                 clientInfo.pInfo[pID].xLoc  = packetInfo->contents[pID].data.x_loc;
                 clientInfo.pInfo[pID].yLoc  = packetInfo->contents[pID].data.y_loc;

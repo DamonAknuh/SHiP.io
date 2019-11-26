@@ -25,9 +25,10 @@
 
 
 // program includes
-#include "project_ser.h"
-#include "slogic.h"
+#include "project_ser.hpp"
+#include "slogic.hpp"
 #include "ssocket_drv.hpp"
+
 
 sLogicDrv_c::~sLogicDrv_c()
 {
@@ -53,48 +54,61 @@ bool sLogicDrv_c::sLogic_InitSInfo()
     return true; 
 }
 
+void sLogicDrv_c::sLogic_Unpack()
+{
+    sSockDrv_c *     sSockDriver  =  sSockDrv_Handle::Handler_GetInstance();
+    clientPacket_t * packetInfo   = (clientPacket_t*) sSockDriver->iPacketBuff;
+
+    clientID_e    iD   = (clientID_e)    packetInfo->header.data.clientID;
+    packetTypes_e type = (packetTypes_e) packetInfo->header.data.type;
+
+
+    std::cout << "|__________________|PACKET|______________________" << std::endl;
+    std::cout << "| Client ID: " << iD << std::endl;
+    std::cout << "| Packet Type: " << type << std::endl; 
+    std::cout << "|" << std::endl;
+
+    switch (type)
+    {
+        case CLIENT_DATA:
+            serverInfo.clientInfo[iD].xLoc  = packetInfo->contents[iD].data.x_loc;
+            serverInfo.clientInfo[iD].yLoc  = packetInfo->contents[iD].data.y_loc;
+            serverInfo.clientInfo[iD].state = packetInfo->contents[iD].data.state;
+            serverInfo.clientInfo[iD].shot  = packetInfo->contents[iD].data.shot;
+            serverInfo.clientInfo[iD].sdir  = packetInfo->contents[iD].data.sdir;
+
+            std::cout << "| xLoc:   " << (uint32_t) serverInfo.clientInfo[iD].xLoc  << std::endl; 
+            std::cout << "| yLoc:   " << (uint32_t) serverInfo.clientInfo[iD].yLoc  << std::endl; 
+            std::cout << "| state:  " << (uint32_t) serverInfo.clientInfo[iD].state << std::endl; 
+            std::cout << "| shot:   " << (uint32_t) serverInfo.clientInfo[iD].shot  << std::endl; 
+            break;
+
+        case CLIENT_EXIT:
+            serverInfo.clientInfo[iD].state = false;
+            break;
+
+        case CLIENT_REG:
+        case CLIENT_ACK:
+        default:
+            std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE.\n|";
+            break;
+    }
+}
+
 
 void Update_GameState()
 {
-    sSockDrv_c * sSockDriver    = sSockDrv_Handle::Handler_GetInstance();
-    clientPacket_t * packetInfo = (clientPacket_t*) sSockDriver->iPacketBuff;
-    clientID_e iD;
-    packetTypes_e type; 
+    sLogicDrv_c * sLogicDrv    = sLogicDrv_Handle::Handler_GetInstance();
+    sSockDrv_c *  sSockDriver  = sSockDrv_Handle::Handler_GetInstance();
 
     if (sSockDriver->sSock_GetPacket())
     {
-        iD   = (clientID_e)    packetInfo->header.data.clientID;
-        type = (packetTypes_e) packetInfo->header.data.type;
-
-        std::cout << "|__________________|PACKET|______________________" << std::endl;
-        std::cout << "| Client ID: " << iD << std::endl;
-        std::cout << "| Packet Type: " << type << std::endl; 
-        std::cout << "|" << std::endl;
-
-        switch (type)
-        {
-            case CLIENT_DATA:
-                serverInfo.clientInfo[iD].xLoc  = packetInfo->contents[iD].data.x_loc;
-                serverInfo.clientInfo[iD].yLoc  = packetInfo->contents[iD].data.y_loc;
-                serverInfo.clientInfo[iD].state = packetInfo->contents[iD].data.state;
-                serverInfo.clientInfo[iD].shot  = packetInfo->contents[iD].data.shot;
-                serverInfo.clientInfo[iD].sdir  = packetInfo->contents[iD].data.sdir;
-
-                std::cout << "| xLoc:   " << (uint32_t) serverInfo.clientInfo[iD].xLoc  << std::endl; 
-                std::cout << "| yLoc:   " << (uint32_t) serverInfo.clientInfo[iD].yLoc  << std::endl; 
-                std::cout << "| state:  " << (uint32_t) serverInfo.clientInfo[iD].state << std::endl; 
-                std::cout << "| shot:   " << (uint32_t) serverInfo.clientInfo[iD].shot  << std::endl; 
-                break;
-
-            case CLIENT_EXIT:
-                serverInfo.clientInfo[iD].state = false;
-                break;
-
-            case CLIENT_REG:
-            case CLIENT_ACK:
-            default:
-                std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE.\n|";
-                break;
-        }
+        sLogicDrv->sLogic_Unpack();
     }
+}
+
+
+void Update_Clients()
+{
+
 }

@@ -22,9 +22,9 @@
 **************************************************************************************************/
 
 
-#include "project_cli.h"
-#include "clogic.h"
-#include "display.h"
+#include "project_cli.hpp"
+#include "clogic.hpp"
+#include "display.hpp"
 
 #include <cstdlib>
 
