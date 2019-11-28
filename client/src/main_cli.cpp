@@ -44,7 +44,6 @@ clientID_e g_pClientID = CLIENT_2;
 
 bool Game_Over()
 {
-
     cSockDrv_c * cSockDriver    = cSockDrv_Handle::Handler_GetInstance();
     cSockDriver->cSock_SendPacket(CLIENT_EXIT);
 
@@ -167,24 +166,24 @@ void Get_Input()
 
         switch (inputCh)
         {
-        case 'a':
-            clientInfo.input  = IO_LEFT;
-            break;
-        case 'd':
-            clientInfo.input  = IO_RIGHT;
-            break;
-        case 'w':
-            clientInfo.input  = IO_UP;
-            break;
-        case 's':
-            clientInfo.input  = IO_DOWN;
-            break;
-        case ' ':
-            clientInfo.input  = IO_SHOOT;
-            break;
-        case 't':
-            clientInfo.input  = IO_EXIT;
-            break;
+            case 'a':
+                clientInfo.input  = IO_LEFT;
+                break;
+            case 'd':
+                clientInfo.input  = IO_RIGHT;
+                break;
+            case 'w':
+                clientInfo.input  = IO_UP;
+                break;
+            case 's':
+                clientInfo.input  = IO_DOWN;
+                break;
+            case ' ':
+                clientInfo.input  = IO_SHOOT;
+                break;
+            case 't':
+                clientInfo.input  = IO_EXIT;
+                break;
         }
     }
 }

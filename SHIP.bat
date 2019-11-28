@@ -1,12 +1,21 @@
-ECHO SHIP IO BATCH COMPILATION
+ECHO "_____________________________"
+ECHO "| SHIP IO BATCH COMPILATION |"
+ECHO "|___________________________|"
+ECHO 
+ECHO "_____________________________"
+ECHO "| Compiling CLIENT Program  |"
+ECHO "|___________________________|"
 ECHO 
 
-ECHO Compiling CLIENT Program
 cd client
 make ../SHIP_CLI
 
-ECHO
-ECHO Compiling SERVER Program
+ECHO 
+ECHO "_____________________________"
+ECHO "| Compiling SERVER Program  |"
+ECHO "|___________________________|"
+ECHO 
+
 cd ../server
 make ../SHIP_SER
 
