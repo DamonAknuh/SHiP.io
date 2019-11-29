@@ -40,8 +40,10 @@
  * @reference https://github.com/spectre1989/odin/blob/c75d394ef2dfe9d71b8229836a304449f36e1940/code/client.cpp
  */
 cSockDrv_c::cSockDrv_c() :
-    lastFailed(0)
+    lastFailed(0),
+    m_Flags(0)
 {
+    SOCKET sock;
     // Initialize the winsock. 
     WORD winsock_version = SIO_WINSOCK_VER;
 
@@ -60,57 +62,20 @@ cSockDrv_c::cSockDrv_c() :
         printf( "\n| ERROR! socket failed: %d", lastFailed);
         exit(0);
     }
+
+    m_Sock.handle = sock;
+    m_AddressSize = sizeof(server_address);
 }
 
-bool cSockDrv_c::sSock_GetPacket()
-{
-    SOCKADDR_IN from;
-    int32_t revStatus;     // todo consolidate
-    int32_t addressSize  = sizeof(server_address);
-    int32_t flags = 0; 
-
-    revStatus = recvfrom(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&from, &addressSize );
-    if( revStatus == SOCKET_ERROR )
-    {
-        printf( "recvfrom returned SOCKET_ERROR, WSAGetLastError() %d", WSAGetLastError() );
-        return false; 
-    }
-
-    return true;
-}
-
-std::string cSockDrv_c::cSock_GetIPAddress()
-{
-    std::string serverAddress;
-    bool status = false; 
-    std::cout << "|\n|_________________________________________________________________________________" << std::endl;
-    std::cout << "| Enter the IP address of the server: \n";
-
-    while(!status)
-    {
-        std::cout << "| --> Note: Input must in form of [ddd.ddd.ddd.ddd]\n";
-        while(!_kbhit()){} // wait for input 
-        // std::cin>>serverAddress;// "192.168.0.17" 
-        // status = validateIPAddress(serverAddress); //@todo: 
-        serverAddress = IP_ADDRESS_ELW;
-        status = true;  // temp
-
-        std::cout << "| Entered: "<< serverAddress << std::endl;
-    }
-
-    return serverAddress;
-}
 
 bool cSockDrv_c::cSock_RegisterClient()
 {
     clientPacket_t * const iPacketInfo = (clientPacket_t*) iPacketBuff;
     std::string serverAddress; 
-    SOCKADDR_IN from;
+
     bool repeat = false; 
     char p2Avatar;
     int32_t revStatus; 
-    int32_t flags = 0;
-    int32_t addressSize  = sizeof(serverAddress); // todo change these to class wide. 
 
     // GET SERVER IP ADDRESS
     serverAddress = cSock_GetIPAddress();
@@ -118,8 +83,8 @@ bool cSockDrv_c::cSock_RegisterClient()
     char tempCArray[serverAddress.size() + 1];
     strcpy(tempCArray, serverAddress.c_str());
 
-    server_address.sin_family = SIO_ADDRESS_FAMILY;
-    server_address.sin_port = htons( SIO_PORT_BINDING );
+    server_address.sin_family   = SIO_ADDRESS_FAMILY;
+    server_address.sin_port     = htons( SIO_PORT_BINDING );
     server_address.sin_addr.S_un.S_addr = inet_addr(tempCArray);  // find by command promt ipconfig
 
 
@@ -135,16 +100,14 @@ bool cSockDrv_c::cSock_RegisterClient()
     // RECIEVE CLIENT ID
     do
     {
-        revStatus = recvfrom(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&from, &addressSize );
+        revStatus = recvfrom(m_Sock.handle, iPacketBuff, SIO_PACKET_SIZE, m_Flags, (SOCKADDR*)&from, &m_AddressSize );
         if( revStatus == SOCKET_ERROR )
         {
-            printf( "recvfrom returned SOCKET_ERROR, WSAGetLastError() %d", WSAGetLastError() );
+            std::cout << "| ERROR Registering recvfrom returned: " << WSAGetLastError() << std::endl;
             repeat = true; 
         }
         else
         {
-            iPacketBuff[revStatus] = 0;
-
             if (iPacketInfo->header.data.type == CLIENT_REG)
             { // todo add checks for corret addy family and ports.
                 dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
@@ -172,18 +135,54 @@ bool cSockDrv_c::cSock_RegisterClient()
                 std::cout<< "   Failed!!\n";
                 repeat = true; 
             }
-            //printf( "%d.%d.%d.%d:%d - %s", clientAddress[i].sin_addr.S_un.S_un_b.s_b1, clientAddress[i].sin_addr.S_un.S_un_b.s_b2, clientAddress[i].sin_addr.S_un.S_un_b.s_b3, clientAddress[i].sin_addr.S_un.S_un_b.s_b4, clientAddress[i].sin_port, OPacketBuff );
         }
     } while (repeat);
     
     return true; 
 }
 
+
+bool cSockDrv_c::sSock_GetPacket()
+{
+    SOCKADDR_IN from;
+    int32_t revStatus;     // todo consolidate
+
+    revStatus = recvfrom(m_Sock.handle, iPacketBuff, SIO_PACKET_SIZE, m_Flags, (SOCKADDR*)&from, &m_AddressSize );
+    if( revStatus == SOCKET_ERROR )
+    {
+        std::cout << "| ERROR! recvfrom returned: " << WSAGetLastError() << std::endl;
+        return false; 
+    }
+
+    return true;
+}
+
+std::string cSockDrv_c::cSock_GetIPAddress()
+{
+    std::string serverAddress;
+    bool status = false; 
+    std::cout << "|\n|_________________________________________________________________________________" << std::endl;
+    std::cout << "| Enter the IP address of the server: \n";
+
+    while(!status)
+    {
+        std::cout << "| --> Note: Input must in form of [ddd.ddd.ddd.ddd]\n";
+        while(!_kbhit()){} // wait for input 
+        // std::cin>>serverAddress;// "192.168.0.17" 
+        // status = validateIPAddress(serverAddress); //@todo: 
+        serverAddress = IP_ADDRESS_EFF;
+        status = true;  // temp
+
+        std::cout << "| Entered: "<< serverAddress << std::endl;
+    }
+
+    return serverAddress;
+}
+
 bool cSockDrv_c::cSock_SendData()
 {
-    bool flags = 0;
     if(SOCKET_ERROR == 
-        sendto(sock, OPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&server_address, sizeof( server_address )))
+        sendto(m_Sock.handle, OPacketBuff, SIO_PACKET_SIZE, m_Flags, (SOCKADDR*)&server_address, sizeof( server_address )))
     {
         printf( "\n !ERROR: Sendto failed: %d\n", WSAGetLastError());
         return false;
@@ -258,5 +257,6 @@ cSockDrv_c::~cSockDrv_c()
     {
         std::cout<< "LAST FAILED: " <<  lastFailed << std::endl;
     }
+
     WSACleanup();
 }

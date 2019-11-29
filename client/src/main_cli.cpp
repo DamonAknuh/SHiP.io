@@ -101,7 +101,10 @@ void Send_Data()
     if (clientInfo.input != IO_NULL)
     {
         cSockDrv_c * cSockDrv = cSockDrv_Handle::Handler_GetInstance();
-        cSockDrv->cSock_SendPacket(CLIENT_DATA);
+        if (!cSockDrv->cSock_SendPacket(CLIENT_DATA))
+        {
+            std::cout << "Failed To send Data packet" << std::endl;
+        }
     }
 }
 
@@ -109,6 +112,7 @@ void Get_ServerData()
 {
     cSockDrv_c * cSockDriver    = cSockDrv_Handle::Handler_GetInstance();
     clientPacket_t * packetInfo = (clientPacket_t*) cSockDriver->iPacketBuff;
+
     clientID_e iD;
     clientID_e pID;
     packetTypes_e type; 
@@ -204,12 +208,13 @@ int main(int argc, char const *argv[])
         exit(0);
     }
 
-    system("cls");
-    std::cout << "________________________________" << std::endl;
+
+    std::cout << "\n\n________________________________" << std::endl;
     std::cout << "|-------~STARTING GAME~--------|" << std::endl;
     std::cout << "|______________________________|" << std::endl;
 
     Sleep(1000);
+    system("cls");
 
     // main game loop
     while(!clientInfo.GAME_OVER)
@@ -217,7 +222,7 @@ int main(int argc, char const *argv[])
 
         Draw_Game();
         Get_Input();
-        Get_ServerData();
+        // Get_ServerData();
         Calculate_GameState();
         Send_Data();
     }

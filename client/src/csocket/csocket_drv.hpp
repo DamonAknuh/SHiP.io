@@ -37,6 +37,13 @@
 #define IP_ADDRESS_SCHL "134.87.162.25" 
 #define IP_ADDRESS_ELW  "134.87.161.7"
 
+#define IP_ADDRESS_EFF  IP_ADDRESS_HOME
+
+typedef struct 
+{
+    SOCKET handle;
+}mySocket;
+
 
 /**
  * PLACE HOLDER FOR CLASS INFORMATION
@@ -45,6 +52,24 @@
  */
 class cSockDrv_c
 {
+private:
+    bool cSock_SendData();
+    std::string cSock_GetIPAddress();
+
+private:
+
+    uint32_t buffer;
+    mySocket m_Sock; 
+    SOCKADDR_IN server_address;
+    SOCKADDR_IN from; 
+    WSADATA winsock_data;
+    
+
+    uint32_t lastFailed; 
+    int32_t  m_Flags;
+    int32_t  m_AddressSize;
+    char OPacketBuff[SIO_PACKET_SIZE];
+
 public:
     char iPacketBuff[SIO_PACKET_SIZE];
 
@@ -57,17 +82,6 @@ public:
     void cSock_RecieveData(uint64_t &input);
     bool sSock_GetPacket();
 
-private:
-    bool cSock_SendData();
-    std::string cSock_GetIPAddress();
-
-private:
-    SOCKET sock; 
-    SOCKADDR_IN server_address;
-    WSADATA winsock_data;
-    char OPacketBuff[SIO_PACKET_SIZE];
-
-    uint32_t lastFailed; 
 };
 
 typedef handler_c<cSockDrv_c> cSockDrv_Handle;
