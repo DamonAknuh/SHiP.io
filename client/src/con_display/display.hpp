@@ -38,7 +38,7 @@ private:
 
 private:
     bool ValidateAvatar(char avatar);
-    char ShotHandler(uint32_t row, uint32_t col);
+    char ShotHandler(uint32_t row, uint32_t col, clientID_e iD, inputs_e shotDir);
 
 public:
     char player1;
@@ -46,6 +46,8 @@ public:
 public:
     bool Set_PlayerOneAvatar(char avatar);
     bool Set_PlayerTwoAvatar(char avatar);
+    void DisplayCredits();
+    void DisplayMenu();
     void Draw_Game();
     void Setup_Avatars();
 

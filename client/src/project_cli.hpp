@@ -42,7 +42,7 @@
 #define RIGHT_SHOT          (3)
 
 #define DEFAULT_P1          ('O')
-#define DEFAULT_P2          ('@')
+#define DEFAULT_P2          ('E')
 
 #define SHOT_MAX_FRAMES      (2)
 
@@ -80,6 +80,7 @@ typedef struct
     uint16_t input;
     uint16_t impInput;
     uint8_t  shotCounter;
+    uint8_t  update;
 
     uint8_t  fxLoc;
     uint8_t  fyLoc;

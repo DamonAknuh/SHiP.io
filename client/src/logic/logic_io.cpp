@@ -21,6 +21,8 @@
     SOFTWARE.                                                                               
 **************************************************************************************************/
 
+// Libary Includes
+#include <iostream>
 
 #include "project_cli.hpp"
 #include "clogic.hpp"
@@ -161,6 +163,7 @@ void cGObjDrv_c::cGObj_IO_Left()
 void cGObjDrv_c::cGObj_IO_Exit()
 {
     clientInfo.GAME_OVER = true;
+    //@todo: dhunka add proper end game send packet
 }
 
 void cGObjDrv_c::cGObj_IO_Shoot()

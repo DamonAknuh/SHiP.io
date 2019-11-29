@@ -64,7 +64,7 @@ bool cGObjDrv_c::cGObj_InitCInfo()
     clientInfo.impInput = IO_NULL; // reset shot to zero
     clientInfo.input = IO_NULL;
 
-    clientInfo.GAME_OVER = false; 
+    clientInfo.GAME_OVER = false;
 
     return true; 
 }

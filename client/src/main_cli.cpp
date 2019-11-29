@@ -56,39 +56,12 @@ bool Game_Over()
     return true;
 }
 
-bool SetupGame()
-{
-    // Driver instantiation and registeration.
-    // Socket Driver
-    cSockDrv_c * cSockDrv    = cSockDrv_Handle::Handler_GetInstance();
-    // Game object Driver
-    cGObjDrv_c * cGObjDrv       = cGObjDrv_Handle::Handler_GetInstance();
-    // Output driver
-    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
-
-    // input functiont to grab the ASCII characters to represent the ships. 
-    dConsoleDrv->Setup_Avatars();
-    
-    // register cleitn program with the server application. 
-    if( cSockDrv->cSock_RegisterClient() == false)
-    {
-        return false; 
-    }
-
-    if (cGObjDrv->cGObj_InitCInfo() == false)
-    {
-        return false; 
-    }
-
-    return true;
-}
-
 
 // http://paste4btc.com/Lu9Cvpd9
 // https://www.youtube.com/watch?v=E_-lMZDi7Uw
 void Draw_Game()
 {
-    if (clientInfo.input != IO_NULL || clientInfo.shotCounter) // no need to redraw if nothing to draw
+    if (clientInfo.input != IO_NULL || clientInfo.shotCounter || clientInfo.update) // no need to redraw if nothing to draw
     {
         dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
         dConsoleDrv->Draw_Game();
@@ -101,9 +74,19 @@ void Send_Data()
     if (clientInfo.input != IO_NULL)
     {
         cSockDrv_c * cSockDrv = cSockDrv_Handle::Handler_GetInstance();
-        if (!cSockDrv->cSock_SendPacket(CLIENT_DATA))
+        if (clientInfo.GAME_OVER)
         {
-            std::cout << "Failed To send Data packet" << std::endl;
+            if (!cSockDrv->cSock_SendPacket(CLIENT_EXIT))
+            {
+                std::cout << "Failed To send Data packet" << std::endl;
+            }
+        }
+        else
+        {
+            if (!cSockDrv->cSock_SendPacket(CLIENT_DATA))
+            {
+                std::cout << "Failed To send Data packet" << std::endl;
+            }
         }
     }
 }
@@ -112,17 +95,20 @@ void Get_ServerData()
 {
     cSockDrv_c * cSockDriver    = cSockDrv_Handle::Handler_GetInstance();
     clientPacket_t * packetInfo = (clientPacket_t*) cSockDriver->iPacketBuff;
+    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
 
     clientID_e iD;
     clientID_e pID;
     packetTypes_e type; 
+    clientInfo.update = false;
 
     if (cSockDriver->sSock_GetPacket())
     {
+        clientInfo.update = true; 
+
         iD   = (clientID_e)    g_ClientID;
         pID  = (clientID_e)    g_pClientID;
         type = (packetTypes_e) packetInfo->header.data.type;
-
         switch (type)
         {
             case CLIENT_DATA:
@@ -133,20 +119,21 @@ void Get_ServerData()
                 // clientInfo.pInfo[iD].shot  = packetInfo->contents[iD].data.shot;
                 // clientInfo.pInfo[iD].sdir  = packetInfo->contents[iD].data.sdir;
                 
-                clientInfo.pInfo[pID].xLoc  = packetInfo->contents[pID].data.x_loc;
-                clientInfo.pInfo[pID].yLoc  = packetInfo->contents[pID].data.y_loc;
+                clientInfo.pInfo[pID].xLoc   = packetInfo->contents[pID].data.x_loc;
+                clientInfo.pInfo[pID].yLoc   = packetInfo->contents[pID].data.y_loc;
+                clientInfo.pInfo[pID].state  = packetInfo->contents[pID].data.state;
+                clientInfo.pInfo[pID].shot   = packetInfo->contents[pID].data.shot;
+                clientInfo.pInfo[pID].sdir   = packetInfo->contents[pID].data.sdir;
+
 
 
                 clientInfo.GAME_OVER = packetInfo->contents[iD].data.state;
-
                 break;
 
             case CLIENT_EXIT:
-                //@todo: game over condition rework. 
-                if (packetInfo->contents[iD].data.state == false)
-                {
-                    clientInfo.GAME_OVER = true;
-                }
+
+                dConsoleDrv->Set_PlayerOneAvatar('X');
+                clientInfo.GAME_OVER = true; 
 
                 break;
 
@@ -156,7 +143,11 @@ void Get_ServerData()
                 std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE.\n|";
                 break;
         }
+
+
+        
     }
+
 }
 
 void Get_Input()
@@ -192,8 +183,75 @@ void Get_Input()
     }
 }
 
+bool SetupGame()
+{
+
+    bool inMenu = true; 
+    char  chInput;
+    // Driver instantiation and registeration.
+    // Socket Driver
+    cSockDrv_c * cSockDrv    = cSockDrv_Handle::Handler_GetInstance();
+    // Game object Driver
+    cGObjDrv_c * cGObjDrv       = cGObjDrv_Handle::Handler_GetInstance();
+    // Output driver
+    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
+
+    while (inMenu)
+    {
+        dConsoleDrv->DisplayMenu();
+
+        while(!_kbhit()){} // wait for input 
+        chInput = _getch();
+
+        switch(chInput)
+        {
+            case '1':
+                // register cleitn program with the server application. 
+                if( cSockDrv->cSock_RegisterClient() == false)
+                {
+                    return false; 
+                }
+
+                if (cGObjDrv->cGObj_InitCInfo() == false)
+                {
+                    return false; 
+                }
+                inMenu = false; 
+                system("cls");
+            break;
+
+            case '2':
+                // input functiont to grab the ASCII characters to represent the ships. 
+                dConsoleDrv->Setup_Avatars();
+                break;
+
+
+            case '3':
+                system("cls");
+                dConsoleDrv->DisplayCredits();
+            break;
+
+
+            case '4':
+                system("cls");
+
+            break;
+
+            case '5':
+                exit(0);
+            break;
+        }
+
+        system("cls");
+    }
+
+    return true;
+}
+
+
 int main(int argc, char const *argv[])
 {
+    //@todo Move std::cout sections to display
     std::cout << std::endl;
     std::cout << "________________________________" << std::endl;
     std::cout << "|---------~!WELCOME!~----------|" << std::endl;
@@ -201,35 +259,35 @@ int main(int argc, char const *argv[])
     std::cout << "|---------TO SHiP.IO-----------|" << std::endl;
     std::cout << "|______________________________|" << std::endl;
 
-    // Game Initialization;
-    if (!SetupGame())
+    while(true)
     {
-        printf("ERROR: Setup Game Failed");
-        exit(0);
-    }
+        // Game Initialization;
+        if (!SetupGame())
+        {
+            printf("ERROR: Setup Game Failed");
+            exit(0);
+        }
 
 
-    std::cout << "\n\n________________________________" << std::endl;
-    std::cout << "|-------~STARTING GAME~--------|" << std::endl;
-    std::cout << "|______________________________|" << std::endl;
+        std::cout << "\n\n________________________________" << std::endl;
+        std::cout << "|-------~STARTING GAME~--------|" << std::endl;
+        std::cout << "|______________________________|" << std::endl;
 
-    Sleep(1000);
-    system("cls");
+        Sleep(1000);
 
-    // main game loop
-    while(!clientInfo.GAME_OVER)
-    {
+        // main game loop
+        while(!clientInfo.GAME_OVER)
+        {
+            Draw_Game();
 
+            Get_Input();
+            Get_ServerData();
+            Calculate_GameState();
+            Send_Data();
+        }
         Draw_Game();
-        Get_Input();
-        // Get_ServerData();
-        Calculate_GameState();
-        Send_Data();
+        Game_Over();
     }
-
-    Draw_Game();
-
-    Game_Over();
 
     return 0;
 }
