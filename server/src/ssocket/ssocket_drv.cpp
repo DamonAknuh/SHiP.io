@@ -84,7 +84,18 @@ bool sSockDrv_c::sSock_GetPacket()
     revStatus = recvfrom(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&from, &addressSize );
     if( revStatus == SOCKET_ERROR )
     {
-        printf( "recvfrom returned SOCKET_ERROR, WSAGetLastError() %d", WSAGetLastError() );
+        lastFailed = WSAGetLastError();
+        if ( lastFailed ==  10054) //@todo: define
+        {
+            std::cout << "| ERROR: CLIENT TIMED-OUT" << std::endl;
+            serverInfo.GAME_OVER = true;
+
+        }
+        else 
+        {
+            printf( "recvfrom returned SOCKET_ERROR, WSAGetLastError() %d", lastFailed );
+        }
+        
         return false; 
     }
 
@@ -178,16 +189,30 @@ bool sSockDrv_c::sSock_SendPacket(packetTypes_e mode, clientID_e iD)
     switch (mode)
     {
         case CLIENT_DATA:
+            for (uint32_t i = 0 ; i < 2; i++) //@todo: dhunka fix end conditions
+            {
+                packetInfo->contents[i].data.x_loc = serverInfo.clientInfo[i].xLoc;
+                packetInfo->contents[i].data.y_loc = serverInfo.clientInfo[i].yLoc;
+                packetInfo->contents[i].data.shot  = serverInfo.clientInfo[i].shot;
+                packetInfo->contents[i].data.sdir  = serverInfo.clientInfo[i].sdir;
+                packetInfo->contents[i].data.state = serverInfo.clientInfo[i].state;
+            }
 
+            if (!sSock_SendData(iD))
+            { 
+                return false; 
+            }
 
             break;
         case CLIENT_ACK:
 
             break;
-
+ 
         case CLIENT_EXIT:
-
-
+            if (!sSock_SendData(iD))
+            { 
+                return false; 
+            }
             break;
         
         case CLIENT_REG:

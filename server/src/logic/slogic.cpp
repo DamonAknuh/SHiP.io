@@ -43,13 +43,12 @@ sLogicDrv_c::sLogicDrv_c()
 bool sLogicDrv_c::sLogic_InitSInfo()
 {
     serverInfo.GAME_OVER = false; 
-    serverInfo.ticks = 0;
 
     for(uint32_t i = 0; i < SIO_MAX_PLAYERS ; i++)
     {
         serverInfo.clientInfo[i].xLoc  = (i*25) + 3;
         serverInfo.clientInfo[i].yLoc  = (i*25) + 3;
-        serverInfo.clientInfo[i].state = 1; 
+        serverInfo.clientInfo[i].state = 0; 
     }
     return true; 
 }
@@ -84,7 +83,16 @@ void sLogicDrv_c::sLogic_Unpack()
             break;
 
         case CLIENT_EXIT:
+
             serverInfo.clientInfo[iD].state = false;
+            if ( iD == CLIENT_1)
+            {
+                sSockDriver->sSock_SendPacket(CLIENT_EXIT, CLIENT_2);
+            }
+            else if (iD == CLIENT_2)
+            {
+                sSockDriver->sSock_SendPacket(CLIENT_EXIT, CLIENT_1);
+            }
             break;
 
         case CLIENT_REG:
@@ -93,8 +101,10 @@ void sLogicDrv_c::sLogic_Unpack()
             std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE.\n|";
             break;
     }
-}
 
+    serverInfo.updateCli = iD;
+    
+}
 
 void Update_GameState()
 {
@@ -105,10 +115,26 @@ void Update_GameState()
     {
         sLogicDrv->sLogic_Unpack();
     }
+
 }
 
 
 void Update_Clients()
 {
+    sSockDrv_c *  sSockDriver  = sSockDrv_Handle::Handler_GetInstance();
 
+    if (serverInfo.updateCli == CLIENT_1)
+    {
+        if (!sSockDriver->sSock_SendPacket(CLIENT_DATA, CLIENT_2))
+        {
+            std::cout<< " | ERROR! Failed to send packet" << std::endl;
+        }
+    }
+    else if (serverInfo.updateCli == CLIENT_2)
+    {
+        if (!sSockDriver->sSock_SendPacket(CLIENT_DATA, CLIENT_1))
+        {
+            std::cout<< " | ERROR! Failed to send packet" << std::endl;
+        }
+    }
 }

@@ -50,9 +50,10 @@ typedef struct
 
 typedef struct
 {
-    uint8_t  GAME_OVER;
-    clientInfo_t clientInfo[SIO_MAX_PLAYERS];
-    uint64_t ticks;
+    clientInfo_t    clientInfo[SIO_MAX_PLAYERS];
+    clientID_e      updateCli;
+    uint64_t        ticks;
+    uint8_t         GAME_OVER;
 }ServerInfo_t;
 
 extern ServerInfo_t serverInfo;
