@@ -35,11 +35,20 @@
 
 class dataBaseDrv_c
 {
+
+private:
+    bool    dB_Select(char avatar);
+    bool    dB_Update(char avatar, uint32_t score);
+    bool    dB_Insert(char avatar, int32_t score);
+
 private:
     sqlite3 *db;
     /* data */
 public:
-    bool dB_InitDB();
+
+    bool    dB_SelectTop();
+    void    dB_UpdateWinner(char avatar);
+    bool    dB_InitDB();
     dataBaseDrv_c();
     ~dataBaseDrv_c();
 };
