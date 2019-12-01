@@ -194,7 +194,11 @@ void dConsoleDrv_c::Draw_Game()
             }
             else if (clientInfo.shotCounter)
             {
-                std::cout << ShotHandler(row, col, CLIENT_1, (inputs_e)clientInfo.impInput);
+                std::cout << ShotHandler(row, col, g_ClientID, (inputs_e)clientInfo.impInput);
+            }
+            else if (clientInfo.pShotCounter)
+            {
+                std::cout << ShotHandler(row, col, g_pClientID, (inputs_e)clientInfo.pInfo[g_pClientID].sdir);
             }
             else
             {
@@ -210,12 +214,13 @@ void dConsoleDrv_c::Draw_Game()
     {
         std::cout << "-";
     }
+
     std::cout << "|";
 
     std::cout << std::endl;
 
     std::cout << "Weapons to deploy: " << (uint32_t)clientInfo.weapons << std::endl;
-    // std::cout << "[X,Y] =  [" <<  (uint32_t)clientInfo.fxLoc<<  "," <<  (uint32_t)clientInfo.fyLoc<< "]" << std::endl;
+    std::cout << "[X,Y] =  [" <<  (uint32_t)clientInfo.fxLoc<<  "," <<  (uint32_t)clientInfo.fyLoc<< "]" << std::endl;
 
     // ensure that the shot only stays on screen for certain amount of frames.
     if (clientInfo.shotCounter)

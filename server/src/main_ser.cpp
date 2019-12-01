@@ -31,6 +31,7 @@
 #include "project_ser.hpp"
 #include "slogic.hpp"
 #include "ssocket_drv.hpp"
+#include "db_drv.hpp"
 
 
 ServerInfo_t serverInfo;
@@ -49,11 +50,20 @@ bool Setup_Game()
     {
         return false; 
     }
+
+    dataBaseDrv_c * dataBaseDrv = dataBase_Handle::Handler_GetInstance(); 
+
+    if ( dataBaseDrv->dB_InitDB() == false)
+    {
+        return false; 
+    }
+
     return true;
 }
 
 int main(int argc, char const *argv[])
 {
+    bool GameSession = true; 
     std::cout << std::endl;
     std::cout << "________________________________" << std::endl;
     std::cout << "|---------~!WELCOME!~----------|" << std::endl;
@@ -62,27 +72,38 @@ int main(int argc, char const *argv[])
     std::cout << "|-----------SERVER-------------|" << std::endl;
     std::cout << "|______________________________|_____________________" << std::endl;
 
-    if (!Setup_Game())
-    {
-        std::cout << "| Failed to setup game" << std::endl;
-        exit(0);
-    }
 
-    std::cout << "________________________________" << std::endl;
-    std::cout << "|-------~FINISHED SETUP~-------|" << std::endl;
-    std::cout << "|______________________________|" << std::endl;
-
-    while(!serverInfo.GAME_OVER)
+    while(GameSession)
     {
-        if (_kbhit() && _getch() == 't')
+
+        if (!Setup_Game())
         {
-            break;
+            std::cout << "| Failed to setup game" << std::endl;
+            exit(0);
         }
 
-        Update_GameState();
-        Update_Clients();
+        std::cout << "________________________________" << std::endl;
+        std::cout << "|-------~FINISHED SETUP~-------|" << std::endl;
+        std::cout << "|______________________________|" << std::endl;
+
+        while(!serverInfo.GAME_OVER)
+        {
+            if (_kbhit() && _getch() == 't')
+            {
+                serverInfo.GAME_OVER = true;
+                GameSession = false; 
+            }
+
+            Update_GameState();
+            Update_Clients();
+        }
+
     }
 
+    
+    std::cout << "________________________________" << std::endl;
+    std::cout << "|-------~CLOSED SERVER~---- ---|" << std::endl;
+    std::cout << "|______________________________|" << std::endl;
     exit(0);
 }
 

@@ -72,18 +72,19 @@ typedef enum
 
 typedef struct
 {
-    uint8_t  GAME_OVER;
+    uint8_t     GAME_OVER;
     
-    pInfo_t pInfo[SIO_MAX_PLAYERS];
+    pInfo_t     pInfo[SIO_MAX_PLAYERS];
 
-    uint8_t  weapons; 
-    uint16_t input;
-    uint16_t impInput;
-    uint8_t  shotCounter;
-    uint8_t  update;
+    uint8_t     weapons; 
+    uint16_t    input;
+    uint16_t    impInput;
+    uint8_t     shotCounter;
+    uint8_t     pShotCounter;
+    uint8_t     update;
 
-    uint8_t  fxLoc;
-    uint8_t  fyLoc;
+    uint8_t     fxLoc;
+    uint8_t     fyLoc;
 
     // more to come. 
 }clientInfo_t;

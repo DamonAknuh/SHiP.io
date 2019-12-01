@@ -61,7 +61,7 @@ bool Game_Over()
 // https://www.youtube.com/watch?v=E_-lMZDi7Uw
 void Draw_Game()
 {
-    if (clientInfo.input != IO_NULL || clientInfo.shotCounter || clientInfo.update) // no need to redraw if nothing to draw
+    if (clientInfo.input != IO_NULL || clientInfo.shotCounter || clientInfo.pShotCounter || clientInfo.update) // no need to redraw if nothing to draw
     {
         dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
         dConsoleDrv->Draw_Game();
@@ -123,6 +123,8 @@ void Get_ServerData()
                 clientInfo.pInfo[pID].yLoc   = packetInfo->contents[pID].data.y_loc;
                 clientInfo.pInfo[pID].state  = packetInfo->contents[pID].data.state;
                 clientInfo.pInfo[pID].shot   = packetInfo->contents[pID].data.shot;
+
+                clientInfo.pShotCounter      = packetInfo->contents[pID].data.shot;
                 clientInfo.pInfo[pID].sdir   = packetInfo->contents[pID].data.sdir;
 
 
@@ -133,6 +135,8 @@ void Get_ServerData()
             case CLIENT_EXIT:
 
                 dConsoleDrv->Set_PlayerOneAvatar('X');
+                clientInfo.pShotCounter      = packetInfo->contents[pID].data.shot;
+                clientInfo.pInfo[pID].sdir   = packetInfo->contents[pID].data.sdir;
                 clientInfo.GAME_OVER = true; 
 
                 break;
@@ -198,6 +202,8 @@ bool SetupGame()
 
     while (inMenu)
     {
+        dConsoleDrv->Set_PlayerOneAvatar('O');
+        dConsoleDrv->Set_PlayerTwoAvatar('O');
         dConsoleDrv->DisplayMenu();
 
         while(!_kbhit()){} // wait for input 
@@ -279,7 +285,6 @@ int main(int argc, char const *argv[])
         while(!clientInfo.GAME_OVER)
         {
             Draw_Game();
-
             Get_Input();
             Get_ServerData();
             Calculate_GameState();

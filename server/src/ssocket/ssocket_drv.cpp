@@ -89,7 +89,6 @@ bool sSockDrv_c::sSock_GetPacket()
         {
             std::cout << "| ERROR: CLIENT TIMED-OUT" << std::endl;
             serverInfo.GAME_OVER = true;
-
         }
         else 
         {
@@ -180,7 +179,8 @@ bool sSockDrv_c::sSock_SendPacket(packetTypes_e mode, clientID_e iD)
 {
     clientPacket_t * const packetInfo = (clientPacket_t*) OPacketBuff;
 //  ensure zerod packet contents
-    packetInfo->contents[0].bits = 0;
+    packetInfo->contents[CLIENT_1].bits = 0;
+    packetInfo->contents[CLIENT_2].bits = 0;
     packetInfo->header.bits = 0;
 
     packetInfo->header.data.type = mode;
@@ -209,6 +209,12 @@ bool sSockDrv_c::sSock_SendPacket(packetTypes_e mode, clientID_e iD)
             break;
  
         case CLIENT_EXIT:
+            packetInfo->contents[CLIENT_1].data.shot  = serverInfo.clientInfo[CLIENT_1].shot;
+            packetInfo->contents[CLIENT_1].data.sdir  = serverInfo.clientInfo[CLIENT_1].sdir;
+
+            packetInfo->contents[CLIENT_2].data.shot  = serverInfo.clientInfo[CLIENT_2].shot;
+            packetInfo->contents[CLIENT_2].data.sdir  = serverInfo.clientInfo[CLIENT_2].sdir;
+            
             if (!sSock_SendData(iD))
             { 
                 return false; 
