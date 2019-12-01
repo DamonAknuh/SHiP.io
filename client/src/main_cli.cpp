@@ -261,7 +261,7 @@ int main(int argc, char const *argv[])
     std::cout << "|---------TO SHiP.IO-----------|" << std::endl;
     std::cout << "|______________________________|" << std::endl;
 
-    srand(time());
+    srand(time(0));
 
     while(true)
     {

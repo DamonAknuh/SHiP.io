@@ -39,26 +39,36 @@ bool cGObjDrv_c::cGObj_InitCInfo()
     clientInfo.fyLoc = (rand() % SIO_GAME_SIZE_Y);
 
     // set weapons to 0
-    clientInfo.weapons = 0;  
-    clientInfo.shotCounter = 0;
+    clientInfo.weapons      = 0;  
+    clientInfo.shotCounter  = 0;
+    clientInfo.pShotCounter = 0;
+    clientInfo.update       = 0;
 
     // temporary untill can handle it in sock initialization.
     // todo make logic layer a class driver object.
+
+    clientInfo.pInfo[g_ClientID].shot = 0;
+    clientInfo.pInfo[g_ClientID].state = 1;
+
+    clientInfo.pInfo[g_pClientID].shot = 0;
+    clientInfo.pInfo[g_pClientID].state = 1;
+
     if (g_ClientID == CLIENT_1) // this should be given in registration. 
     {
-        clientInfo.pInfo[g_ClientID].xLoc = 4;
-        clientInfo.pInfo[g_ClientID].yLoc = 3;
+        clientInfo.pInfo[g_ClientID].xLoc = SIO_P1_XSTART;
+        clientInfo.pInfo[g_ClientID].yLoc = SIO_P1_YSTART;
 
-        clientInfo.pInfo[g_pClientID].xLoc = SIO_GAME_SIZE_X - 4;
-        clientInfo.pInfo[g_pClientID].yLoc = SIO_GAME_SIZE_Y - 3;
+        clientInfo.pInfo[g_pClientID].xLoc = SIO_P2_XSTART;
+        clientInfo.pInfo[g_pClientID].yLoc = SIO_P2_YSTART;
     }
     else if (g_ClientID == CLIENT_2)
     {
-        clientInfo.pInfo[g_ClientID].xLoc = SIO_GAME_SIZE_X - 4;
-        clientInfo.pInfo[g_ClientID].yLoc = SIO_GAME_SIZE_Y - 3;
+        clientInfo.pInfo[g_ClientID].xLoc = SIO_P2_XSTART;
+        clientInfo.pInfo[g_ClientID].yLoc = SIO_P2_YSTART;
 
-        clientInfo.pInfo[g_pClientID].xLoc = 4;
-        clientInfo.pInfo[g_pClientID].yLoc = 3;
+
+        clientInfo.pInfo[g_pClientID].xLoc = SIO_P1_XSTART;
+        clientInfo.pInfo[g_pClientID].yLoc = SIO_P1_YSTART;
     }
 
     clientInfo.impInput = IO_NULL; // reset shot to zero

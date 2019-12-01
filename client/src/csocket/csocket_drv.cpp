@@ -40,7 +40,6 @@
  * @reference https://github.com/spectre1989/odin/blob/c75d394ef2dfe9d71b8229836a304449f36e1940/code/client.cpp
  */
 cSockDrv_c::cSockDrv_c() :
-    m_UnRegistered(true),
     lastFailed(0),
     m_Flags(0)
 {
@@ -78,78 +77,76 @@ bool cSockDrv_c::cSock_RegisterClient()
     char p2Avatar;
     int32_t revStatus; 
 
-    if (m_UnRegistered)
+    // GET SERVER IP ADDRESS
+    serverAddress = cSock_GetIPAddress();
+    
+    char tempCArray[serverAddress.size() + 1];
+    strcpy(tempCArray, serverAddress.c_str());
+
+    server_address.sin_family   = SIO_ADDRESS_FAMILY;
+    server_address.sin_port     = htons( SIO_PORT_BINDING );
+    server_address.sin_addr.S_un.S_addr = inet_addr(tempCArray);  // find by command promt ipconfig
+
+
+    std::cout << "|\n|_________________________________________________________________________________" << std::endl;
+    std::cout << "| Sending Join request to server... " << std::endl;
+
+    // SEND JOIN REQUEST
+    if (!cSock_SendPacket(CLIENT_REG))
     {
-        // GET SERVER IP ADDRESS
-        serverAddress = cSock_GetIPAddress();
-        
-        char tempCArray[serverAddress.size() + 1];
-        strcpy(tempCArray, serverAddress.c_str());
+        return false; 
+    }
 
-        server_address.sin_family   = SIO_ADDRESS_FAMILY;
-        server_address.sin_port     = htons( SIO_PORT_BINDING );
-        server_address.sin_addr.S_un.S_addr = inet_addr(tempCArray);  // find by command promt ipconfig
-
-
-        std::cout << "|\n|_________________________________________________________________________________" << std::endl;
-        std::cout << "| Sending Join request to server... ";
-
-        // SEND JOIN REQUEST
-        if (!cSock_SendPacket(CLIENT_REG))
+    // RECIEVE CLIENT ID
+    do
+    {
+        revStatus = recvfrom(m_Sock.handle, iPacketBuff, SIO_PACKET_SIZE, m_Flags, (SOCKADDR*)&from, &m_AddressSize );
+        if( revStatus == SOCKET_ERROR)
         {
-            return false; 
-        }
-
-        // RECIEVE CLIENT ID
-        do
-        {
-            revStatus = recvfrom(m_Sock.handle, iPacketBuff, SIO_PACKET_SIZE, m_Flags, (SOCKADDR*)&from, &m_AddressSize );
-            if( revStatus == SOCKET_ERROR )
-            {
+            if (WSAGetLastError()  !=  SIO_WOULD_BLOCK_ERR){
                 std::cout << "| ERROR Registering recvfrom returned: " << WSAGetLastError() << std::endl;
-                repeat = true; 
             }
-            else
-            {
-                if (iPacketInfo->header.data.type == CLIENT_REG)
-                { // todo add checks for corret addy family and ports.
-                    dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
-                    g_ClientID = (clientID_e) iPacketInfo->header.data.clientID;
-
-                    if (g_ClientID == CLIENT_1)
-                    {
-                        p2Avatar = iPacketInfo->contents[CLIENT_2].data.avatar;
-                        g_pClientID = CLIENT_2;
-                    }
-                    else if (g_ClientID == CLIENT_2)
-                    {
-                        p2Avatar = iPacketInfo->contents[CLIENT_1].data.avatar;
-                        g_pClientID = CLIENT_1;
-                    }
-
-                    dConsoleDrv->Set_PlayerTwoAvatar(p2Avatar);
-
-                    std::cout<< "Success!\n";
-                    std::cout << "| You are player number: " << (uint32_t)g_ClientID + 1  << std::endl;
-                    std::cout << "| Opponent chosen Avatar: " << p2Avatar;
-                }
-                else 
-                {
-                    std::cout<< "   Failed!!\n";
-                    repeat = true; 
-                }
-            }
-        } while (repeat);
-
-        u_long enable = 1; 
-        revStatus = ioctlsocket(m_Sock.handle, FIONBIO , &enable);
-        if( revStatus == SOCKET_ERROR )
-        {
-            std::cout << "| ERROR ioctlsocket recvfrom returned: " << WSAGetLastError() << std::endl;
             repeat = true; 
         }
+        else
+        {
+            if (iPacketInfo->header.data.type == CLIENT_REG)
+            { // todo add checks for corret addy family and ports.
+                dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
+                g_ClientID = (clientID_e) iPacketInfo->header.data.clientID;
 
-        m_UnRegistered = false; 
+                if (g_ClientID == CLIENT_1)
+                {
+                    p2Avatar = iPacketInfo->contents[CLIENT_2].data.avatar;
+                    g_pClientID = CLIENT_2;
+                }
+                else if (g_ClientID == CLIENT_2)
+                {
+                    p2Avatar = iPacketInfo->contents[CLIENT_1].data.avatar;
+                    g_pClientID = CLIENT_1;
+                }
+
+                dConsoleDrv->Set_PlayerTwoAvatar(p2Avatar);
+
+                std::cout << "| Success!\n";
+                std::cout << "| You are player number: " << (uint32_t)g_ClientID + 1  << std::endl;
+                std::cout << "| Opponent chosen Avatar: " << p2Avatar;
+                repeat = false;
+            }
+            else 
+            {
+                std::cout<< "| Unexpected Packet Type [" << iPacketInfo->header.data.type <<  "], retrying...\n";
+                repeat = true; 
+            }
+        }
+    } while (repeat);
+
+    u_long enable = 1; 
+    revStatus = ioctlsocket(m_Sock.handle, FIONBIO , &enable);
+    if( revStatus == SOCKET_ERROR )
+    {
+        std::cout << "| ERROR ioctlsocket recvfrom returned: " << WSAGetLastError() << std::endl;
+        repeat = true; 
     }
 
     return true; 
@@ -158,6 +155,11 @@ bool cSockDrv_c::cSock_RegisterClient()
 
 bool cSockDrv_c::sSock_GetPacket()
 {
+    clientPacket_t * const packetInfo  = (clientPacket_t*) iPacketBuff;
+    packetInfo->contents[0].bits = 0;
+    packetInfo->contents[1].bits = 0;
+    packetInfo->header.bits = 0;
+
     SOCKADDR_IN from;
     int32_t revStatus;     // todo consolidate
 
@@ -224,7 +226,7 @@ bool cSockDrv_c::cSock_SendPacket(packetTypes_e mode)
         case CLIENT_DATA:
             packetInfo->contents[iD].data.x_loc = clientInfo.pInfo[iD].xLoc;
             packetInfo->contents[iD].data.y_loc = clientInfo.pInfo[iD].yLoc;
-            packetInfo->contents[iD].data.shot  = (clientInfo.shotCounter == 1);
+            packetInfo->contents[iD].data.shot  = !!(clientInfo.shotCounter); // mask to 2 bits.
             packetInfo->contents[iD].data.sdir  = clientInfo.impInput;
             packetInfo->contents[iD].data.state = clientInfo.GAME_OVER;
 
@@ -239,6 +241,8 @@ bool cSockDrv_c::cSock_SendPacket(packetTypes_e mode)
             break;
 
         case CLIENT_EXIT:
+            packetInfo->contents[iD].data.shot  = !!(clientInfo.shotCounter); // mask to 2 bits.
+            packetInfo->contents[iD].data.sdir  = clientInfo.impInput;
             if (!cSock_SendData())
             { 
                 return false; 

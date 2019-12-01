@@ -28,6 +28,7 @@
 #include "project_ser.hpp"
 #include "slogic.hpp"
 #include "ssocket_drv.hpp"
+#include "db_drv.hpp"
 
 
 sLogicDrv_c::~sLogicDrv_c()
@@ -42,19 +43,26 @@ sLogicDrv_c::sLogicDrv_c()
 
 bool sLogicDrv_c::sLogic_InitSInfo()
 {
+    int xStartingLoc[2] = {SIO_P1_XSTART, SIO_P2_XSTART};
+    int yStartingLoc[2] = {SIO_P1_YSTART, SIO_P2_YSTART};
     serverInfo.GAME_OVER = false; 
+    serverInfo.ticks = 0;
+
 
     for(uint32_t i = 0; i < SIO_MAX_PLAYERS ; i++)
     {
-        serverInfo.clientInfo[i].xLoc  = (i*25) + 3;
-        serverInfo.clientInfo[i].yLoc  = (i*25) + 3;
+        serverInfo.clientInfo[i].xLoc  = xStartingLoc[i];
+        serverInfo.clientInfo[i].yLoc  = yStartingLoc[i];
         serverInfo.clientInfo[i].state = 0; 
+        serverInfo.clientInfo[i].shot  = 0; 
+        serverInfo.clientInfo[i].sdir  = 0; 
     }
     return true; 
 }
 
 void sLogicDrv_c::sLogic_Unpack()
 {
+    dataBaseDrv_c * dataBaseDrv = dataBase_Handle::Handler_GetInstance(); 
     sSockDrv_c *     sSockDriver  =  sSockDrv_Handle::Handler_GetInstance();
     clientPacket_t * packetInfo   = (clientPacket_t*) sSockDriver->iPacketBuff;
 
@@ -62,7 +70,7 @@ void sLogicDrv_c::sLogic_Unpack()
     packetTypes_e type = (packetTypes_e) packetInfo->header.data.type;
 
 
-    std::cout << "|__________________|PACKET|______________________" << std::endl;
+    std::cout << "|__________________|PACKET|__________________________________" << std::endl;
     std::cout << "| Client ID: " << iD << std::endl;
     std::cout << "| Packet Type: " << type << std::endl; 
     std::cout << "|" << std::endl;
@@ -83,8 +91,12 @@ void sLogicDrv_c::sLogic_Unpack()
             break;
 
         case CLIENT_EXIT:
-
+            // if recieving end game packet. send exit game packet to client. 
+            serverInfo.GAME_OVER = true; 
             serverInfo.clientInfo[iD].state = false;
+            serverInfo.clientInfo[iD].shot  = packetInfo->contents[iD].data.shot;
+            serverInfo.clientInfo[iD].sdir  = packetInfo->contents[iD].data.sdir;
+            dataBaseDrv->dB_UpdateWinner(serverInfo.clientInfo[iD].avatar);
             if ( iD == CLIENT_1)
             {
                 sSockDriver->sSock_SendPacket(CLIENT_EXIT, CLIENT_2);

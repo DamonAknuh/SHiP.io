@@ -32,6 +32,8 @@
 /*                            GLOBAL DEFINTIONS                                                  */
 /*************************************************************************************************/
 
+
+
 #define SIO_WINSOCK_VER         (0x202)
 #define SIO_ADDRESS_FAMILY      (AF_INET)
 #define SIO_SOCKET_TYPE         (SOCK_DGRAM)
@@ -44,8 +46,14 @@
 #define SIO_EFF_GAME_SIZE_X     (SIO_GAME_SIZE_X-2)
 #define SIO_GAME_SIZE_Y         (25)
 
+#define SIO_P1_XSTART           (4)
+#define SIO_P1_YSTART           (3)
+#define SIO_P2_XSTART           (SIO_GAME_SIZE_X - SIO_P1_XSTART)
+#define SIO_P2_YSTART           (SIO_GAME_SIZE_Y - SIO_P1_YSTART)
 
-#define UNUSED(x) (void) x
+
+#define SIO_WOULD_BLOCK_ERR     (10035)
+#define UNUSED(x) ((void) x)
 
 /*************************************************************************************************/
 /*                            ENUMs TYPEDEFS & STRUCTURES                                        */
@@ -65,6 +73,19 @@ typedef enum
     CLIENT_2 = 1,
 } clientID_e;
 
+
+typedef struct
+{
+    char    avatar;
+    uint32_t score; 
+}entry_t;
+
+typedef struct
+{
+    entry_t entry[5];
+}topScores_t;
+
+extern topScores_t topScores;
 
 typedef struct
 {

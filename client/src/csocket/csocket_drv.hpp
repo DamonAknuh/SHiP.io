@@ -35,12 +35,9 @@
 #define IP_ADDRESS_HOME "192.168.0.17"
 #define IP_ADDRESS_ECS  "134.87.162.25"
 #define IP_ADDRESS_SCHL "134.87.162.25" 
-#define IP_ADDRESS_ELW  "134.87.161.7"
+#define IP_ADDRESS_ELW  "134.87.163.255"
 
-#define IP_ADDRESS_355  "134.87.165.226"
-
-
-#define IP_ADDRESS_EFF  IP_ADDRESS_355
+#define IP_ADDRESS_EFF  IP_ADDRESS_ELW
 
 typedef struct 
 {
@@ -60,8 +57,6 @@ private:
     std::string cSock_GetIPAddress();
 
 private:
-
-    bool m_UnRegistered;
     mySocket m_Sock; 
     SOCKADDR_IN server_address;
     SOCKADDR_IN from; 

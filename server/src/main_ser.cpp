@@ -97,7 +97,6 @@ int main(int argc, char const *argv[])
             Update_GameState();
             Update_Clients();
         }
-
     }
 
     
