@@ -29,6 +29,7 @@
 #include <stdbool.h>
 #include <conio.h> // for kbhit and getch.
 #include <windows.h>
+#include <ctime>
 
 
 // Customized Includes
@@ -112,13 +113,6 @@ void Get_ServerData()
         switch (type)
         {
             case CLIENT_DATA:
-                //@todo: do we need to grab our data?
-                // clientInfo.pInfo[iD].xLoc  = packetInfo->contents[iD].data.x_loc;
-                // clientInfo.pInfo[iD].yLoc  = packetInfo->contents[iD].data.y_loc;
-                
-                // clientInfo.pInfo[iD].shot  = packetInfo->contents[iD].data.shot;
-                // clientInfo.pInfo[iD].sdir  = packetInfo->contents[iD].data.sdir;
-                
                 clientInfo.pInfo[pID].xLoc   = packetInfo->contents[pID].data.x_loc;
                 clientInfo.pInfo[pID].yLoc   = packetInfo->contents[pID].data.y_loc;
                 clientInfo.pInfo[pID].state  = packetInfo->contents[pID].data.state;
@@ -144,7 +138,7 @@ void Get_ServerData()
             case CLIENT_REG:
             case CLIENT_ACK:
             default:
-                std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE.\n|";
+                std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE: " << type << std::endl;
                 break;
         }
 
@@ -200,10 +194,11 @@ bool SetupGame()
     // Output driver
     dConsoleDrv_c * dConsoleDrv = dConsoleDrv_Handle::Handler_GetInstance();
 
+    dConsoleDrv->Set_PlayerOneAvatar((rand() % 26) +'A');
+    dConsoleDrv->Set_PlayerTwoAvatar((rand() % 26) +'A');
+
     while (inMenu)
     {
-        dConsoleDrv->Set_PlayerOneAvatar('O');
-        dConsoleDrv->Set_PlayerTwoAvatar('O');
         dConsoleDrv->DisplayMenu();
 
         while(!_kbhit()){} // wait for input 
@@ -257,6 +252,7 @@ bool SetupGame()
 
 int main(int argc, char const *argv[])
 {
+
     //@todo Move std::cout sections to display
     std::cout << std::endl;
     std::cout << "________________________________" << std::endl;
@@ -264,6 +260,8 @@ int main(int argc, char const *argv[])
     std::cout << "|------------------------------|" << std::endl;
     std::cout << "|---------TO SHiP.IO-----------|" << std::endl;
     std::cout << "|______________________________|" << std::endl;
+
+    srand(time());
 
     while(true)
     {
