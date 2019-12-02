@@ -127,7 +127,7 @@ char dConsoleDrv_c::ShotHandler(uint32_t row, uint32_t col, clientID_e iD, input
 **/
 bool dConsoleDrv_c::ValidateAvatar(char avatar)
 {
-    if ((avatar == ' ') || (avatar == '|') || (avatar == '-') || (avatar == '_') || (iscntrl(avatar)))
+    if ((avatar == ' ') || (avatar == '|') || (avatar == '-') || (avatar == '_') || (avatar == '+') || (iscntrl(avatar)))
     {
         return false;
     }
