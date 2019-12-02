@@ -24,7 +24,6 @@
 #ifndef __DB_DRV_HPP
  #define __DB_DRV_HPP
 
-
 // Library Includes
 #include <stdint.h>
 

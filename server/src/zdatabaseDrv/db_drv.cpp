@@ -50,14 +50,12 @@ static int callback(void *data, int argc, char **argv, char **azColName)
 static int callbackTop(void *data, int argc, char **argv, char **azColName)
 {
     fprintf(stderr, "| %s: ", (const char*)data);
-    
 
     topScores.entry[counter].avatar =  argv[0][0];
     topScores.entry[counter].score  =  atoi(argv[1]);
 
-    std::cout << counter << "). " <<  topScores.entry[counter].avatar << " === " << topScores.entry[counter].score << std::endl;
+    std::cout << counter << "). " <<  topScores.entry[counter].avatar << " === " << (uint32_t)topScores.entry[counter].score << std::endl;
     
-
     counter++;
     return 0;
 }
@@ -85,7 +83,7 @@ void dataBaseDrv_c::dB_UpdateWinner(char avatar)
 bool dataBaseDrv_c::dB_SelectTop()
 {
     counter = 0;
-    std::cout << "| Selecting Top 5 Scores ... " << std::endl;
+    std::cout << "\n| Selecting Top 5 Scores ... " << std::endl;
     const char* data = "SQL TOP 5 QUERY RESULT: ";
     int32_t status = 0; 
     char *zErrMsg = 0;
@@ -95,7 +93,7 @@ bool dataBaseDrv_c::dB_SelectTop()
     status = sqlite3_exec(db, sqlSelectTop, callbackTop, (void*)data , &zErrMsg);
     if ( status != SQLITE_OK)
     {
-        std::cout << " WARNING: failed to select top 5 scores: " << sqlite3_errmsg(db) << std::endl;
+        std::cout << "|    WARNING: failed to select top 5 scores: " << sqlite3_errmsg(db) << std::endl;
         return false; 
     }
 
@@ -119,7 +117,7 @@ bool dataBaseDrv_c::dB_Select(char avatar)
     status = sqlite3_exec(db, sqlSelect, callback, (void*)data , &zErrMsg);
     if ( status != SQLITE_OK)
     {
-        std::cout << " WARNING: failed to select scores: " << sqlite3_errmsg(db) << std::endl;
+        std::cout << "|    WARNING: failed to select scores: " << sqlite3_errmsg(db) << std::endl;
         return false; 
     }
 
@@ -139,7 +137,7 @@ bool dataBaseDrv_c::dB_Update(char avatar, uint32_t score)
     status = sqlite3_exec(db, sqlUpdate, NULL, 0 , &zErrMsg);
     if ( status != SQLITE_OK)
     {
-        std::cout << " WARNING: failed to update scores: " << sqlite3_errmsg(db) << std::endl;
+        std::cout << "|    WARNING: failed to update scores: " << sqlite3_errmsg(db) << std::endl;
         return false; 
         //@todo 
     }
@@ -169,7 +167,7 @@ bool dataBaseDrv_c::dB_Insert(char avatar, int32_t score)
     status = sqlite3_exec(db, sqlInsert, callback, (void*)data , &zErrMsg);
     if ( status != SQLITE_OK)
     {
-        std::cout << " WARNING: failed to update scores: " << sqlite3_errmsg(db) << std::endl;
+        std::cout << "|    WARNING: failed to update scores: " << sqlite3_errmsg(db) << std::endl;
         return false; 
     }
     std::cout << "| Success!" << std::endl;
@@ -189,7 +187,7 @@ bool dataBaseDrv_c::dB_InitDB()
     if (status)
     {
         std::cout << "| ERROR: Can't open database: " << sqlite3_errmsg(db) << std::endl;
-    return false;
+        return false;
     }
 
     // char const * sql = "CREATE TABLE SCORES(AVATAR CHAR    PRIMARY KEY NOT NULL,SCORE          INT    NOT NULL);";
