@@ -50,6 +50,7 @@
 #define SIO_P1_YSTART           (3)
 #define SIO_P2_XSTART           (SIO_GAME_SIZE_X - SIO_P1_XSTART)
 #define SIO_P2_YSTART           (SIO_GAME_SIZE_Y - SIO_P1_YSTART)
+#define SIO_MAX_LDRBOARD        (5)
 
 
 #define SIO_WOULD_BLOCK_ERR     (10035)
@@ -64,7 +65,7 @@ typedef enum
     CLIENT_DATA = 0,
     CLIENT_REG  = 1,
     CLIENT_EXIT = 2,
-    CLIENT_ACK  = 3, 
+    CLIENT_SCRS = 4,
 } packetTypes_e;
 
 typedef enum
@@ -73,16 +74,15 @@ typedef enum
     CLIENT_2 = 1,
 } clientID_e;
 
-
 typedef struct
 {
     char    avatar;
-    uint32_t score; 
-}entry_t;
+    uint8_t score; 
+} cScores_t; 
 
 typedef struct
 {
-    entry_t entry[5];
+    cScores_t entry[SIO_MAX_LDRBOARD];
 }topScores_t;
 
 extern topScores_t topScores;
@@ -122,16 +122,15 @@ typedef struct
     };
 }cData_t; 
 
-
-
 typedef struct 
 {
     cHeader_t header;
 
     union
     {
-        cData_t contents[SIO_MAX_PLAYERS];
-        uint8_t PACKET_BYTES[SIO_PACKET_SIZE];
+        cScores_t   scores[SIO_MAX_LDRBOARD]; // @tdo: get rid of magic numbers.
+        cData_t     contents[SIO_MAX_PLAYERS];
+        uint8_t     PACKET_BYTES[SIO_PACKET_SIZE];
     };
 } clientPacket_t;
 

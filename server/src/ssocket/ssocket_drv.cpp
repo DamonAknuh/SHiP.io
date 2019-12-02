@@ -29,6 +29,7 @@
 
 #include "ssocket_drv.hpp"
 #include "project_ser.hpp"
+#include "db_drv.hpp"
 
 /**
  * Initialization functionj for the the socket 
@@ -101,6 +102,19 @@ bool sSockDrv_c::sSock_GetPacket()
     return true;
 }
 
+void sSockDrv_c::sSock_GetScores(SOCKADDR_IN from)
+{
+    dataBaseDrv_c * dataBaseDrv = dataBase_Handle::Handler_GetInstance(); 
+    dataBaseDrv->dB_SelectTop(); 
+
+    // safe to piggy back on client 3 for 
+    clientAddress[2].sin_family = SIO_ADDRESS_FAMILY;
+    clientAddress[2].sin_port   = from.sin_port;
+    clientAddress[2].sin_addr   = from.sin_addr;
+
+    sSock_SendPacket(CLIENT_SCRS, (clientID_e) (2));
+}
+
 bool sSockDrv_c::sSock_RegisterClient()
 {
     clientPacket_t * const packetInfo = (clientPacket_t*) iPacketBuff;
@@ -131,7 +145,7 @@ bool sSockDrv_c::sSock_RegisterClient()
                 std::cout << "  Successfull!";
                 std::cout << "\n|    Client ID: " << i;
                 std::cout << "\n|    Avatar:    " << (char) packetInfo->header.data.response;
-                printf( "\n|    Address:   %d.%d.%d.%d", clientAddress[i].sin_addr.S_un.S_un_b.s_b1, clientAddress[i].sin_addr.S_un.S_un_b.s_b2, clientAddress[i].sin_addr.S_un.S_un_b.s_b3, clientAddress[i].sin_addr.S_un.S_un_b.s_b4);
+                printf(      "\n|    Address:   %d.%d.%d.%d", clientAddress[i].sin_addr.S_un.S_un_b.s_b1, clientAddress[i].sin_addr.S_un.S_un_b.s_b2, clientAddress[i].sin_addr.S_un.S_un_b.s_b3, clientAddress[i].sin_addr.S_un.S_un_b.s_b4);
                 std::cout << "\n|    Port:      " << clientAddress[i].sin_port << std::endl;
 
                 // avatar information is giving back in response data section
@@ -139,6 +153,11 @@ bool sSockDrv_c::sSock_RegisterClient()
                 
                 i++;
                 
+            }
+            //@todo: better place to put this.
+            else if (packetInfo->header.data.type == CLIENT_SCRS)
+            {
+                sSock_GetScores(from);
             }
             else 
             {
@@ -202,9 +221,18 @@ bool sSockDrv_c::sSock_SendPacket(packetTypes_e mode, clientID_e iD)
             { 
                 return false; 
             }
-
             break;
-        case CLIENT_ACK:
+
+        case CLIENT_SCRS:
+            for (uint32_t i = 0; i < SIO_MAX_LDRBOARD; i++)
+            {
+                packetInfo->scores[i] = topScores.entry[i];
+            }
+
+            if (!sSock_SendData(iD))
+            { 
+                return false; 
+            }
 
             break;
  

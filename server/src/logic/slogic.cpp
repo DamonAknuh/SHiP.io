@@ -108,7 +108,7 @@ void sLogicDrv_c::sLogic_Unpack()
             break;
 
         case CLIENT_REG:
-        case CLIENT_ACK:
+        case CLIENT_SCRS:
         default:
             std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE.\n|";
             break;

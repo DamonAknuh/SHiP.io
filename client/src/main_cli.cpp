@@ -38,6 +38,7 @@
 #include "clogic.hpp"
 #include "display.hpp"
 
+topScores_t topScores; 
 clientInfo_t clientInfo;
 // default to first client. will be reset anyways in csock registeration. 
 clientID_e g_ClientID = CLIENT_1; 
@@ -126,6 +127,13 @@ void Get_ServerData()
                 clientInfo.GAME_OVER = packetInfo->contents[iD].data.state;
                 break;
 
+            case CLIENT_SCRS:
+                for (uint32_t i = 0; i < SIO_MAX_LDRBOARD; i++)
+                {
+                    topScores.entry[i] = packetInfo->scores[i];
+                }
+                break;
+
             case CLIENT_EXIT:
 
                 dConsoleDrv->Set_PlayerOneAvatar('X');
@@ -136,14 +144,10 @@ void Get_ServerData()
                 break;
 
             case CLIENT_REG:
-            case CLIENT_ACK:
             default:
                 std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE: " << type << std::endl;
                 break;
         }
-
-
-        
     }
 
 }
@@ -206,7 +210,7 @@ bool SetupGame()
 
         switch(chInput)
         {
-            case '1':
+            case '1': // START GAME
                 // register cleitn program with the server application. 
                 if( cSockDrv->cSock_RegisterClient() == false)
                 {
@@ -221,24 +225,42 @@ bool SetupGame()
                 system("cls");
             break;
 
-            case '2':
+            case '2': // CHANGE AVATAR
                 // input functiont to grab the ASCII characters to represent the ships. 
                 dConsoleDrv->Setup_Avatars();
                 break;
 
 
-            case '3':
+            case '3': // DISPLAY CREDITS
                 system("cls");
                 dConsoleDrv->DisplayCredits();
             break;
 
 
-            case '4':
+            case '4': // SHOW SCORES
+                cSockDrv->cSock_SendPacket(CLIENT_SCRS);
+                std::cout << "| Getting Server Data..." << std::endl;
+                Sleep (1000);
                 system("cls");
+                Get_ServerData();
+                std::cout << "___________________________________________________________" << std::endl;
+                std::cout << "|                  SHiP.IO Leader Board                   |" << std::endl;
+                std::cout << "|                                                         |" << std::endl;
+                std::cout << "|_________________________________________________________|" << std::endl;
+                for ( uint32_t i = 0; i < SIO_MAX_LDRBOARD; i++)
+                {
+                    std::cout << "|" << (i+1) << "). " << topScores.entry[i].avatar << " with " << (uint32_t)topScores.entry[i].score << " Wins                                        |" << std::endl;
+                }
+                std::cout << "|PRESS ANY KEY TO EXIT                                    |" << std::endl;
+                std::cout << "|_________________________________________________________|" << std::endl;
+                while (!_kbhit())
+                {
+                } // wait for input
 
+                system("cls");
             break;
 
-            case '5':
+            case '5': // EXIT GAME
                 exit(0);
             break;
         }

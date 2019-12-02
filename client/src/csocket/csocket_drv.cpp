@@ -65,6 +65,12 @@ cSockDrv_c::cSockDrv_c() :
 
     m_Sock.handle = sock;
     m_AddressSize = sizeof(server_address);
+
+    
+    server_address.sin_family           = SIO_ADDRESS_FAMILY;
+    server_address.sin_port             = htons( SIO_PORT_BINDING );
+    server_address.sin_addr.S_un.S_addr = inet_addr(IP_ADDRESS_EFF);  // find by command promt ipconfig
+
 }
 
 
@@ -145,7 +151,7 @@ bool cSockDrv_c::cSock_RegisterClient()
     revStatus = ioctlsocket(m_Sock.handle, FIONBIO , &enable);
     if( revStatus == SOCKET_ERROR )
     {
-        std::cout << "| ERROR ioctlsocket recvfrom returned: " << WSAGetLastError() << std::endl;
+        std::cout << "| ERROR ioctlsocket returned: " << WSAGetLastError() << std::endl;
         repeat = true; 
     }
 
@@ -236,8 +242,11 @@ bool cSockDrv_c::cSock_SendPacket(packetTypes_e mode)
             }
             break;
 
-        case CLIENT_ACK:
-
+        case CLIENT_SCRS:
+            if (!cSock_SendData())
+            { 
+                return false; 
+            }
             break;
 
         case CLIENT_EXIT:

@@ -52,12 +52,13 @@ public:
     char iPacketBuff[SIO_PACKET_SIZE];
 
 private:
+    void sSock_GetScores(SOCKADDR_IN from);
     bool sSock_SendData(clientID_e iD);
 
 private:
     SOCKET sock; 
     SOCKADDR_IN localAddress;
-    SOCKADDR_IN clientAddress[2];
+    SOCKADDR_IN clientAddress[3];
     WSADATA winsock_data;
 
 

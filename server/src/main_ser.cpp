@@ -38,6 +38,14 @@ ServerInfo_t serverInfo;
 
 bool Setup_Game()
 {
+
+    dataBaseDrv_c * dataBaseDrv = dataBase_Handle::Handler_GetInstance(); 
+
+    if ( dataBaseDrv->dB_InitDB() == false)
+    {
+        return false; 
+    }
+
     sSockDrv_c * sSockDriver    = sSockDrv_Handle::Handler_GetInstance();
 
     if( sSockDriver->sSock_RegisterClient() == false)
@@ -47,13 +55,6 @@ bool Setup_Game()
     sLogicDrv_c * sLogicDrv    = sLogicDrv_Handle::Handler_GetInstance();
 
     if ( sLogicDrv->sLogic_InitSInfo() == false)
-    {
-        return false; 
-    }
-
-    dataBaseDrv_c * dataBaseDrv = dataBase_Handle::Handler_GetInstance(); 
-
-    if ( dataBaseDrv->dB_InitDB() == false)
     {
         return false; 
     }
