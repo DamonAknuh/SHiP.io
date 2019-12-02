@@ -99,9 +99,7 @@ void cGObjDrv_c::cGObj_IO_Right()
 
     if ((tempXLoc != clientInfo.pInfo[g_pClientID].xLoc) || (clientInfo.pInfo[g_ClientID].yLoc != clientInfo.pInfo[g_pClientID].yLoc)) // handle player player conflict. 
     {
-        tempXLoc = tempXLoc % SIO_EFF_GAME_SIZE_X;
-        
-        if(tempXLoc > SIO_EFF_GAME_SIZE_X)
+        if(tempXLoc >= SIO_GAME_SIZE_X-1)
         {
             tempXLoc = 1; 
         }
