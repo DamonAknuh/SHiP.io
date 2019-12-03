@@ -290,7 +290,7 @@ int main(int argc, char const *argv[])
         // Game Initialization;
         if (!SetupGame())
         {
-            printf("ERROR: Setup Game Failed");
+            printf("    ERROR: Setup Game Failed");
             exit(0);
         }
 

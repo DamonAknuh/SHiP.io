@@ -49,12 +49,12 @@ static int callback(void *data, int argc, char **argv, char **azColName)
 
 static int callbackTop(void *data, int argc, char **argv, char **azColName)
 {
-    fprintf(stderr, "| %s: ", (const char*)data);
+    fprintf(stderr, "| %s ", (const char*)data);
 
     topScores.entry[counter].avatar =  argv[0][0];
     topScores.entry[counter].score  =  atoi(argv[1]);
 
-    std::cout << counter << "). " <<  topScores.entry[counter].avatar << " === " << (uint32_t)topScores.entry[counter].score << std::endl;
+    std::cout << (counter+1) << "). Avatar: " <<  topScores.entry[counter].avatar << " with " << (uint32_t)topScores.entry[counter].score << " wins" <<  std::endl;
     
     counter++;
     return 0;
@@ -64,7 +64,7 @@ static int callbackTop(void *data, int argc, char **argv, char **azColName)
 void dataBaseDrv_c::dB_UpdateWinner(char avatar)
 {
 
-    std::cout << "|__________________|UPDATING SCORES|_________________________" << std::endl;
+    std::cout << "|__________________|UPDATING SCORES|___________________________________" << std::endl;
 
     if (dB_Select(avatar) == false)
     {
@@ -77,17 +77,21 @@ void dataBaseDrv_c::dB_UpdateWinner(char avatar)
         
     }
 
-    std::cout << "|____________________________________________________________" << std::endl;
+    std::cout << "|______________________________________________________________________" << std::endl;
 }
 
 bool dataBaseDrv_c::dB_SelectTop()
 {
+
     counter = 0;
-    std::cout << "\n| Selecting Top 5 Scores ... " << std::endl;
-    const char* data = "SQL TOP 5 QUERY RESULT: ";
+    const char* data = "   --> SQL TOP 5 QUERY RESULT: ";
+    char const * sqlSelectTop = "SELECT * FROM SCORES ORDER BY SCORE DESC LIMIT 5";
     int32_t status = 0; 
     char *zErrMsg = 0;
-    char const * sqlSelectTop = "SELECT * FROM SCORES ORDER BY SCORE DESC LIMIT 5";
+
+
+    std::cout << "|______________|SELECTING TOP SCORES|__________________________________" << std::endl;
+    std::cout << "|\n| Selecting Top 5 Scores ... " << std::endl;
     std::cout << "| SQL Select Command: " << sqlSelectTop << std::endl;
 
     status = sqlite3_exec(db, sqlSelectTop, callbackTop, (void*)data , &zErrMsg);
@@ -96,10 +100,11 @@ bool dataBaseDrv_c::dB_SelectTop()
         std::cout << "|    WARNING: failed to select top 5 scores: " << sqlite3_errmsg(db) << std::endl;
         return false; 
     }
-
     std::cout << "| Success!" << std::endl;
-    return true; 
+    std::cout << "|______________________________________________________________________" << std::endl;
 
+
+    return true; 
 }
 
 
@@ -121,7 +126,7 @@ bool dataBaseDrv_c::dB_Select(char avatar)
         return false; 
     }
 
-    std::cout << "| Success!" << std::endl;
+    std::cout << "|    Success!" << std::endl;
     return true; 
 }
 
@@ -143,7 +148,7 @@ bool dataBaseDrv_c::dB_Update(char avatar, uint32_t score)
     }
 
     
-    std::cout << "| Success!" << std::endl;
+    std::cout << "|    Success!" << std::endl;
 
 
     dB_SelectTop();
@@ -170,7 +175,7 @@ bool dataBaseDrv_c::dB_Insert(char avatar, int32_t score)
         std::cout << "|    WARNING: failed to update scores: " << sqlite3_errmsg(db) << std::endl;
         return false; 
     }
-    std::cout << "| Success!" << std::endl;
+    std::cout << "|    Success!" << std::endl;
     return true; 
 }
 //https://www.tutorialspoint.com/sqlite/sqlite_c_cpp.html
@@ -186,7 +191,7 @@ bool dataBaseDrv_c::dB_InitDB()
     status = sqlite3_open("scores.db", &db);
     if (status)
     {
-        std::cout << "| ERROR: Can't open database: " << sqlite3_errmsg(db) << std::endl;
+        std::cout << "|    ERROR: Can't open database: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
 
@@ -196,10 +201,10 @@ bool dataBaseDrv_c::dB_InitDB()
     // status = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
     // if ( status != SQLITE_OK)
     // {
-    //     std::cout << "| ERROR: Can't create table: " << sqlite3_errmsg(db) << std::endl;
+    //     std::cout << "|    ERROR: Can't create table: " << sqlite3_errmsg(db) << std::endl;
     //     return false;
     // }
-    // std::cout << " Success!" << std::endl;
+    // std::cout << "     Success!" << std::endl;
 
     // for ( uint32_t i = '!'; i <= '~'; i++)
     // {
@@ -210,7 +215,7 @@ bool dataBaseDrv_c::dB_InitDB()
 
 
 
-    std::cout << "|____________________________________________________________" << std::endl;
+    std::cout << "|______________________________________________________________________" << std::endl;
     
     return true; 
 }

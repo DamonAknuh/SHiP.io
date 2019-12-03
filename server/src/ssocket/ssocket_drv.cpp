@@ -48,7 +48,7 @@ sSockDrv_c::sSockDrv_c() :
     if( WSAStartup( winsock_version, &winsock_data ) )
     {
         lastFailed = WSAGetLastError();
-        printf( "\n| ERROR! WSAStartup failed: %d", lastFailed);
+        printf( "\n|    ERROR! WSAStartup failed: %d", lastFailed);
         return;
     }
 
@@ -58,7 +58,7 @@ sSockDrv_c::sSockDrv_c() :
     if( sock == INVALID_SOCKET )
     {
         lastFailed = WSAGetLastError();
-        printf( "\n| ERROR! socket creation failed: %d", lastFailed);
+        printf( "\n|    ERROR! socket creation failed: %d", lastFailed);
         return;
     }
 
@@ -70,7 +70,7 @@ sSockDrv_c::sSockDrv_c() :
     if ( bind (sock, (SOCKADDR*)&localAddress, sizeof(localAddress) ) == SOCKET_ERROR ) 
     {   
         lastFailed = WSAGetLastError();
-        printf( "\n| ERROR! socket binding failed: %d", lastFailed);
+        printf( "\n|    ERROR! socket binding failed: %d", lastFailed);
         return;
     }
 }
@@ -88,7 +88,7 @@ bool sSockDrv_c::sSock_GetPacket()
         lastFailed = WSAGetLastError();
         if ( lastFailed ==  10054) //@todo: define
         {
-            std::cout << "| ERROR: CLIENT TIMED-OUT" << std::endl;
+            std::cout << "|    ERROR: CLIENT TIMED-OUT" << std::endl;
             serverInfo.GAME_OVER = true;
         }
         else 
@@ -125,7 +125,8 @@ bool sSockDrv_c::sSock_RegisterClient()
 
     for(uint32_t i = 0; i < SIO_MAX_PLAYERS;)
     {
-        std::cout<< "| Attempting to Register Client: " << i << "...";
+        std::cout<< "| Attempting to Register Client: " << i << "..." << std::endl;
+        std::cout<< "| " << std::endl;
         revStatus = recvfrom(sock, iPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&from, &addressSize );
         
         if( revStatus == SOCKET_ERROR )
@@ -142,7 +143,7 @@ bool sSockDrv_c::sSock_RegisterClient()
                 clientAddress[i].sin_port   = from.sin_port;
                 clientAddress[i].sin_addr   = from.sin_addr;
 
-                std::cout << "  Successfull!";
+                std::cout <<   "|    Successfull!";
                 std::cout << "\n|    Client ID: " << i;
                 std::cout << "\n|    Avatar:    " << (char) packetInfo->header.data.response;
                 printf(      "\n|    Address:   %d.%d.%d.%d", clientAddress[i].sin_addr.S_un.S_un_b.s_b1, clientAddress[i].sin_addr.S_un.S_un_b.s_b2, clientAddress[i].sin_addr.S_un.S_un_b.s_b3, clientAddress[i].sin_addr.S_un.S_un_b.s_b4);
@@ -161,7 +162,7 @@ bool sSockDrv_c::sSock_RegisterClient()
             }
             else 
             {
-                std::cout<< "   Failed!!\n";
+                std::cout<< "|    Failed! retrying registeration\n";
             }
             //printf( "%d.%d.%d.%d:%d - %s", clientAddress[i].sin_addr.S_un.S_un_b.s_b1, clientAddress[i].sin_addr.S_un.S_un_b.s_b2, clientAddress[i].sin_addr.S_un.S_un_b.s_b3, clientAddress[i].sin_addr.S_un.S_un_b.s_b4, clientAddress[i].sin_port, OPacketBuff );
         }
@@ -186,7 +187,7 @@ bool sSockDrv_c::sSock_SendData(clientID_e iD)
         sendto(sock, OPacketBuff, SIO_PACKET_SIZE, flags, (SOCKADDR*)&clientAddress[iD], sizeof( clientAddress[iD] )))
     {
         lastFailed = WSAGetLastError();
-        printf( "\n !ERROR: Sendto failed: %d\n", lastFailed);
+        printf( "\n    !ERROR: Sendto failed: %d\n", lastFailed);
         return false;
     }
 

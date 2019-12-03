@@ -70,7 +70,7 @@ void sLogicDrv_c::sLogic_Unpack()
     packetTypes_e type = (packetTypes_e) packetInfo->header.data.type;
 
 
-    std::cout << "|__________________|PACKET|__________________________________" << std::endl;
+    std::cout << "|__________________|PACKET|____________________________________________" << std::endl;
     std::cout << "| Client ID: " << iD << std::endl;
     std::cout << "| Packet Type: " << type << std::endl; 
     std::cout << "|" << std::endl;
@@ -110,7 +110,7 @@ void sLogicDrv_c::sLogic_Unpack()
         case CLIENT_REG:
         case CLIENT_SCRS:
         default:
-            std::cout << "\n| WARNING! UNEXPECTED PACKET TYPE.\n|";
+            std::cout << "\n|    WARNING! UNEXPECTED PACKET TYPE.\n|";
             break;
     }
 
@@ -139,14 +139,14 @@ void Update_Clients()
     {
         if (!sSockDriver->sSock_SendPacket(CLIENT_DATA, CLIENT_2))
         {
-            std::cout<< " | ERROR! Failed to send packet" << std::endl;
+            std::cout<< " |    ERROR! Failed to send packet" << std::endl;
         }
     }
     else if (serverInfo.updateCli == CLIENT_2)
     {
         if (!sSockDriver->sSock_SendPacket(CLIENT_DATA, CLIENT_1))
         {
-            std::cout<< " | ERROR! Failed to send packet" << std::endl;
+            std::cout<< " |    ERROR! Failed to send packet" << std::endl;
         }
     }
 }

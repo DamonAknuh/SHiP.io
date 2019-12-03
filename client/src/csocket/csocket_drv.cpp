@@ -50,7 +50,7 @@ cSockDrv_c::cSockDrv_c() :
     if( WSAStartup( winsock_version, &winsock_data ) )
     {
         lastFailed = WSAGetLastError();
-        printf( "\n| ERROR! WSAStartup failed: %d", lastFailed);
+        printf( "\n|    ERROR! WSAStartup failed: %d", lastFailed);
         exit(0);
     }
 
@@ -59,7 +59,7 @@ cSockDrv_c::cSockDrv_c() :
     if( sock == INVALID_SOCKET )
     {
         lastFailed = WSAGetLastError();
-        printf( "\n| ERROR! socket failed: %d", lastFailed);
+        printf( "\n|    ERROR! socket failed: %d", lastFailed);
         exit(0);
     }
 
@@ -134,7 +134,7 @@ bool cSockDrv_c::cSock_RegisterClient()
 
                 dConsoleDrv->Set_PlayerTwoAvatar(p2Avatar);
 
-                std::cout << "| Success!\n";
+                std::cout << "|    Success!\n";
                 std::cout << "| You are player number: " << (uint32_t)g_ClientID + 1  << std::endl;
                 std::cout << "| Opponent chosen Avatar: " << p2Avatar;
                 repeat = false;
