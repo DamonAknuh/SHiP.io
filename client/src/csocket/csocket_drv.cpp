@@ -110,7 +110,7 @@ bool cSockDrv_c::cSock_RegisterClient()
         if( revStatus == SOCKET_ERROR)
         {
             if (WSAGetLastError()  !=  SIO_WOULD_BLOCK_ERR){
-                std::cout << "| ERROR Registering recvfrom returned: " << WSAGetLastError() << std::endl;
+                std::cout << "|    ERROR Registering recvfrom returned: " << WSAGetLastError() << std::endl;
             }
             repeat = true; 
         }
@@ -151,7 +151,7 @@ bool cSockDrv_c::cSock_RegisterClient()
     revStatus = ioctlsocket(m_Sock.handle, FIONBIO , &enable);
     if( revStatus == SOCKET_ERROR )
     {
-        std::cout << "| ERROR ioctlsocket returned: " << WSAGetLastError() << std::endl;
+        std::cout << "|    ERROR ioctlsocket returned: " << WSAGetLastError() << std::endl;
         repeat = true; 
     }
 
@@ -206,7 +206,7 @@ bool cSockDrv_c::cSock_SendData()
     if(SOCKET_ERROR == 
         sendto(m_Sock.handle, OPacketBuff, SIO_PACKET_SIZE, m_Flags, (SOCKADDR*)&server_address, sizeof( server_address )))
     {
-        printf( "\n !ERROR: Sendto failed: %d\n", WSAGetLastError());
+        printf( "\n    !ERROR: Sendto failed: %d\n", WSAGetLastError());
         return false;
     }
 
