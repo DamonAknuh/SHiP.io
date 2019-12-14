@@ -114,7 +114,7 @@ It will also be responsible for tracking the characteristics of each player in t
     - [X] - Independent game width and height
     - [X] - No need to redraw if no client inputs and no packets recieved. 
     - [ ] - (OPTIONAL)Replace console with openGL or 2D game library. 
-  - [X] - GAME OUTPUT
+  - [X] - MENU
     - [X] - Credits
     - [X] - Avatar Change
     - [X] - Start Game
